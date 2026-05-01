@@ -1,0 +1,134 @@
+.header {
+  width: 100%;
+  height: fit-content;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  padding: var(--px-16) var(--px-24);
+  border-bottom: 1px solid var(--platinum-gray);
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: var(--px-32);
+
+  transition: 0.3s ease;
+
+  :global(.menu) {
+    aspect-ratio: 1/1;
+    font-size: var(--fs-10);
+    padding: var(--px-8);
+
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    padding: var(--px-8) var(--px-16);
+    border-radius: var(--px-8);
+
+    cursor: pointer;
+  }
+  :global(.menu):hover {
+    background-color: var(--signal-orange);
+  }
+  :global(.menu):active {
+    transform: scale(0.7);
+  }
+
+  :global(.logo) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--px-8);
+
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    padding: var(--px-8) var(--px-16);
+    border-radius: var(--px-8);
+
+    img {
+      width: var(--px-48);
+    }
+
+    h1 {
+      font-size: var(--fs-6);
+      font-weight: 600;
+      color: var(--signal-orange);
+
+      span {
+        color: var(--platinum-gray);
+      }
+    }
+  }
+
+  :global(.navbar) {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--px-16);
+    overflow: hidden;
+
+    a {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--px-16);
+
+      padding: var(--px-16);
+      border-radius: var(--px-16);
+      border-bottom: 2px solid var(--steel-blue);
+      background-color: var(--platinum-gray);
+
+      font-size: var(--fs-6);
+      font-weight: 600;
+      color: var(--midnight-blue);
+
+      cursor: pointer;
+    }
+    a:hover {
+      background-color: var(--signal-orange);
+    }
+    a:active {
+      transform: scale(0.9);
+    }
+  }
+  :global(.navbar:not(.open)) {
+    height: 0;
+    animation: closeMenu 0.3s forwards;
+  }
+}
+.header.scrolled {
+  background-color: var(--midnight-blue);
+}
+
+@keyframes closeMenu {
+  0%,
+  99% {
+    position: sticky;
+  }
+  100% {
+    position: fixed;
+  }
+}
+
+.footer {
+  width: 100%;
+
+  border-top: 1px solid var(--platinum-gray);
+  padding: var(--px-16);
+
+  text-align: center;
+  text-shadow: 2px 1px 8px var(--gray-700);
+  font-size: var(--fs-5);
+  font-weight: 500;
+  color: var(--midnight-blue);
+
+  span {
+    color: var(--signal-orange);
+  }
+}

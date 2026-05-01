@@ -65,11 +65,15 @@
   border-radius: var(--px-16);
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--primary);
+  background-color: var(--gray-600);
   border-radius: var(--px-16);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, var(--primary), var(--secondary));
+  background: linear-gradient(
+    to bottom,
+    var(--platinum-gray),
+    var(--signal-orange)
+  );
   cursor: pointer;
 }
 
@@ -176,5 +180,11 @@ h6 {
   flex-direction: column;
 
   position: relative;
-  padding: 0 var(--px-128);
+  padding: 0 var(--px-32);
+}
+
+@media screen and (min-width: 768px) {
+  #root {
+    padding: 0 var(--px-128);
+  }
 }
