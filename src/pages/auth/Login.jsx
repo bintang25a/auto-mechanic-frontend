@@ -6,6 +6,8 @@ import { FaEnvelope, FaLock, FaRightFromBracket } from "react-icons/fa6";
 import { useState } from "react";
 import { login } from "../../_services/auth";
 import { Link, useNavigate } from "react-router-dom";
+import LoadingJump from "../../components/overlay/JumpLoading";
+import InfoModal from "../../components/overlay/InfoModal";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,6 +18,17 @@ export default function Login() {
   };
 
   const [formData, setFormData] = useState(form);
+  const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    isError: false,
+    title: "",
+    message: "",
+  });
+
+  const closeModal = () => {
+    setModal({ isOpen: false, title: "", message: "" });
+  };
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -28,14 +41,22 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       await login(formData);
-      alert("Berhasil daftar di AutoMechanic!");
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       console.error(error);
-      alert("Pendaftaran gagal.");
+
+      setModal({
+        isOpen: true,
+        isError: true,
+        title: "Login failed",
+        message: error?.message,
+      });
+    } finally {
+      setTimeout(() => setIsLoading(false), 250);
     }
   };
 
@@ -98,6 +119,14 @@ export default function Login() {
         </div>
       </main>
       <InteractiveBackground />
+      <InfoModal
+        isOpen={modal?.isOpen}
+        isError={modal?.isError}
+        onClose={closeModal}
+        title={modal?.title}
+        message={modal?.message}
+      />
+      {isLoading && <LoadingJump />}
     </>
   );
 }

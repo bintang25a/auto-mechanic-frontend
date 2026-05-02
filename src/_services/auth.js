@@ -1,16 +1,17 @@
 import API from "../_api";
-import message from "../_utilities/errorMessage";
 
 // Fungsi Register
 export const register = async (data) => {
   try {
     const response = await API.post("/register", data);
-    const resData = response.data.data;
+    const resData = response?.data?.data;
 
     localStorage.setItem("user", JSON.stringify(resData));
+
+    return response;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };
 
@@ -18,23 +19,23 @@ export const register = async (data) => {
 export const login = async (data) => {
   try {
     const response = await API.post("/login", data);
-    const resData = response.data.data;
-    const token = resData.token;
+    const resData = response?.data?.data;
+    const token = resData?.token;
     const user = {
-      name: resData.name,
-      uid: resData.uid,
-      email: resData.email,
-      phone_number: resData.phone_number,
-      role: resData.role,
+      name: resData?.name,
+      uid: resData?.uid,
+      email: resData?.email,
+      phone_number: resData?.phone_number,
+      role: resData?.role,
     };
 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
-    return token;
+    return resData;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };
 
@@ -74,6 +75,6 @@ export const logout = async () => {
     return response.data;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };

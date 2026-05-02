@@ -1,7 +1,6 @@
-import InteractiveBackground from "../../components/background/interactiveBackground";
-import Footer from "../../components/layout/Footer";
-import logo from "/images/logo/logo-nobg.png";
-import styles from "../../styles/Auth.module.css";
+import { useState } from "react";
+
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaEnvelope,
   FaIdCard,
@@ -11,9 +10,13 @@ import {
   FaUser,
   FaWhatsapp,
 } from "react-icons/fa6";
-import { useState } from "react";
 import { register } from "../../_services/auth";
-import { Link, useNavigate } from "react-router-dom";
+import InteractiveBackground from "../../components/background/interactiveBackground";
+import Footer from "../../components/layout/Footer";
+import logo from "/images/logo/logo-nobg.png";
+import styles from "../../styles/Auth.module.css";
+import InfoModal from "../../components/overlay/InfoModal";
+import LoadingJump from "../../components/overlay/JumpLoading";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -29,6 +32,17 @@ export default function Register() {
   };
 
   const [formData, setFormData] = useState(form);
+  const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    isError: false,
+    title: "",
+    message: "",
+  });
+
+  const closeModal = () => {
+    setModal({ isOpen: false, title: "", message: "" });
+  };
 
   const handleChange = (e) => {
     const { value, name, files } = e.target;
@@ -51,9 +65,18 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (formData.password !== formData.confirmPass) {
-      alert("Konfirmasi password tidak sesuai!");
+      setIsLoading(false);
+
+      setModal({
+        isOpen: true,
+        isError: true,
+        title: "Password not match",
+        message: "Please input the same value in password",
+      });
+
       return;
     }
 
@@ -71,12 +94,26 @@ export default function Register() {
     }
 
     try {
-      await register(payload);
-      alert("Berhasil daftar di AutoMechanic!");
-      navigate("/");
+      const response = await register(payload);
+
+      setModal({
+        isOpen: true,
+        title: response?.message,
+        message: "Please check your email to verify account",
+      });
+
+      navigate("/", { replace: true });
     } catch (error) {
-      console.error(error);
-      alert("Pendaftaran gagal.");
+      console.error(error?.response?.message);
+
+      setModal({
+        isOpen: true,
+        isError: true,
+        title: "Register failed",
+        message: error.message,
+      });
+    } finally {
+      setTimeout(() => setIsLoading(false), 250);
     }
   };
 
@@ -219,6 +256,14 @@ export default function Register() {
         </div>
       </main>
       <InteractiveBackground />
+      <InfoModal
+        isOpen={modal?.isOpen}
+        isError={modal?.isError}
+        onClose={closeModal}
+        title={modal?.title}
+        message={modal?.message}
+      />
+      {isLoading && <LoadingJump />}
     </>
   );
 }

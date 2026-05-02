@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   MdAppRegistration,
   MdClose,
   MdHistory,
   MdHome,
   MdLogin,
+  MdLogout,
   MdMenu,
   MdPerson,
   MdPersonAddAlt,
@@ -13,6 +14,7 @@ import {
 } from "react-icons/md";
 import logo from "/images/logo/logo-nobg.png";
 import styles from "../../styles/Layout.module.css";
+import { logout } from "../../_services/auth";
 
 function UnsignedNavbar({ isOpen }) {
   return (
@@ -29,9 +31,26 @@ function UnsignedNavbar({ isOpen }) {
   );
 }
 
-function SignedNavbar({ isOpen }) {
+function SignedNavbar({ isOpen, user, handleLogout }) {
   return (
     <nav className={`navbar ${isOpen && "open"}`}>
+      <div className="profile">
+        <div className="photo">
+          {user?.photo ? <img src="" alt="Photo" /> : "Photo"}
+        </div>
+
+        <div className="text">
+          <h2>{user?.name}</h2>
+          <span>
+            {user?.role} || {user?.email}
+          </span>
+        </div>
+
+        <button title="logout" onClick={handleLogout}>
+          <MdLogout />
+        </button>
+      </div>
+
       <Link to={"/"}>
         <MdHome /> Home
       </Link>
@@ -51,10 +70,13 @@ function SignedNavbar({ isOpen }) {
   );
 }
 
-export default function Header() {
+export default function Header({ setIsLoading }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [user, setUser] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,12 +92,33 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    setUser(userData ? JSON.parse(userData) : {});
 
     if (token) {
       setIsLogin(true);
     }
+
+    setTimeout(() => setIsLoading(false), 500);
+
+    // eslint-disable-next-line
   }, []);
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+
+    await logout();
+
+    setIsLogin(false);
+    setIsOpen(false);
+    navigate("/", { replace: true });
+
+    setTimeout(() => setIsLoading(false), 250);
+  };
 
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}>
@@ -93,7 +136,7 @@ export default function Header() {
       {!isLogin ? (
         <UnsignedNavbar isOpen={isOpen} />
       ) : (
-        <SignedNavbar isOpen={isOpen} />
+        <SignedNavbar isOpen={isOpen} user={user} handleLogout={handleLogout} />
       )}
     </header>
   );

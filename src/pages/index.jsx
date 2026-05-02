@@ -15,11 +15,15 @@ import {
 } from "react-icons/fa6";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import { useState } from "react";
+import LoadingJump from "../components/overlay/JumpLoading";
 
 export default function LandingPage() {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <>
-      <Header />
+      <Header setIsLoading={setIsLoading} />
       <main className={styles.main}>
         <section className="hero">
           <div className="logo">
@@ -97,6 +101,7 @@ export default function LandingPage() {
 
       <Footer />
       <InteractiveBackground />
+      {isLoading && <LoadingJump />}
     </>
   );
 }
