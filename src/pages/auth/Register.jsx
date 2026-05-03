@@ -41,6 +41,10 @@ export default function Register() {
   });
 
   const closeModal = () => {
+    if (!modal?.isError) {
+      navigate("/login", { replace: true });
+    }
+
     setModal({ isOpen: false, title: "", message: "" });
   };
 
@@ -98,11 +102,9 @@ export default function Register() {
 
       setModal({
         isOpen: true,
-        title: response?.message,
+        title: response?.data?.message,
         message: "Please check your email to verify account",
       });
-
-      navigate("/", { replace: true });
     } catch (error) {
       console.error(error?.response?.message);
 

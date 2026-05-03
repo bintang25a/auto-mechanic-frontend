@@ -17,7 +17,33 @@
 
   transition: 0.3s ease;
 
-  :global(.menu) {
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--px-8);
+
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    padding: var(--px-8) var(--px-16);
+    border-radius: var(--px-8);
+
+    > img {
+      width: var(--px-48);
+    }
+
+    > h1 {
+      font-size: var(--fs-6);
+      font-weight: 600;
+      color: var(--signal-orange);
+
+      span {
+        color: var(--platinum-gray);
+      }
+    }
+  }
+
+  .menuButton {
     aspect-ratio: 1/1;
     font-size: var(--fs-10);
     padding: var(--px-8);
@@ -29,40 +55,81 @@
 
     cursor: pointer;
   }
-  :global(.menu):hover {
+  .menuButton:hover {
     background-color: var(--signal-orange);
   }
-  :global(.menu):active {
+  .menuButton:active {
     transform: scale(0.7);
   }
 
-  :global(.logo) {
+  .profile {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: var(--px-8);
+    gap: var(--px-24);
 
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(20px);
-    padding: var(--px-8) var(--px-16);
-    border-radius: var(--px-8);
+    padding: var(--px-32) var(--px-16);
+    border-top: 1px solid var(--platinum-gray);
+    border-bottom: 1px solid var(--platinum-gray);
 
-    img {
-      width: var(--px-48);
+    position: relative;
+
+    > :global(.photo) {
+      aspect-ratio: 1/1;
+      width: var(--px-128);
+      height: auto;
+      background-color: var(--platinum-gray);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border-radius: 200px;
     }
 
-    h1 {
-      font-size: var(--fs-6);
-      font-weight: 600;
-      color: var(--signal-orange);
+    > :global(.text) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: var(--px-8);
 
-      span {
+      > h2 {
+        line-height: 1;
+        font-size: var(--fs-9);
+        font-weight: 600;
         color: var(--platinum-gray);
       }
+
+      > span {
+        line-height: 1.5;
+        font-size: var(--fs-6);
+        font-weight: 400;
+        color: var(--gray-300);
+      }
+    }
+
+    > button {
+      position: absolute;
+      right: var(--px-16);
+      top: 50%;
+      transform: translateY(-50%);
+
+      padding: var(--px-8);
+      border-radius: var(--px-8);
+      background-color: var(--btn-danger);
+
+      font-size: var(--fs-10);
+      color: var(--platinum-gray);
+      cursor: pointer;
+    }
+    > button:hover {
+      background-color: var(--signal-orange);
     }
   }
 
-  :global(.navbar) {
+  .navbar {
     height: fit-content;
     width: 100%;
     display: flex;
@@ -71,73 +138,7 @@
     align-items: flex-start;
     gap: var(--px-16);
     overflow: hidden;
-
-    :global(.profile) {
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      gap: var(--px-24);
-
-      padding: var(--px-32) var(--px-16);
-      border-top: 1px solid var(--platinum-gray);
-      border-bottom: 1px solid var(--platinum-gray);
-
-      position: relative;
-
-      :global(.photo) {
-        aspect-ratio: 1/1;
-        width: var(--px-128);
-        height: auto;
-        background-color: var(--platinum-gray);
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        border-radius: 200px;
-      }
-
-      :global(.text) {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        gap: var(--px-8);
-
-        h2 {
-          line-height: 1;
-          font-size: var(--fs-9);
-          font-weight: 600;
-          color: var(--platinum-gray);
-        }
-
-        span {
-          line-height: 1.5;
-          font-size: var(--fs-6);
-          font-weight: 400;
-          color: var(--gray-300);
-        }
-      }
-
-      > button {
-        position: absolute;
-        right: var(--px-16);
-        top: 50%;
-        transform: translateY(-50%);
-
-        padding: var(--px-8);
-        border-radius: var(--px-8);
-        background-color: var(--btn-danger);
-
-        font-size: var(--fs-10);
-        color: var(--platinum-gray);
-        cursor: pointer;
-      }
-      > button:hover {
-        background-color: var(--signal-orange);
-      }
-    }
+    z-index: 1001;
 
     a {
       width: 100%;
@@ -164,12 +165,12 @@
       transform: scale(0.9);
     }
   }
-  :global(.navbar:not(.open)) {
+  .navbar:not(:global(.open)) {
     height: 0;
     animation: closeMenu 0.3s forwards;
   }
 }
-.header:has(:global(.navbar.open)),
+.header:has(:global(.open).navbar),
 .header.scrolled {
   background-color: var(--midnight-blue);
 }
@@ -198,5 +199,102 @@
 
   span {
     color: var(--signal-orange);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    align-items: center;
+
+    > :global(.navbar) {
+      flex: 1;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      position: static !important;
+
+      a {
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--px-4);
+
+        padding: var(--px-4);
+        border-radius: var(--px-8);
+        border-bottom: 2px solid var(--steel-blue);
+        background-color: var(--platinum-gray);
+
+        font-size: var(--fs-4);
+        text-wrap: nowrap;
+
+        cursor: pointer;
+      }
+      a:hover {
+        background-color: var(--signal-orange);
+      }
+      a:active {
+        transform: scale(0.9);
+      }
+    }
+    > :global(.navbar:not(.open)) {
+      height: fit-content;
+    }
+
+    .profile {
+      width: fit-content;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: var(--px-8);
+
+      padding: 0;
+      border: none;
+
+      position: relative;
+
+      > :global(.photo) {
+        width: var(--px-64);
+        font-size: var(--fs-3);
+      }
+
+      > :global(.text) {
+        width: fit-content;
+        align-items: flex-end;
+        gap: var(--px-8);
+
+        > h2 {
+          font-size: var(--fs-5);
+        }
+
+        > span {
+          font-size: var(--fs-3);
+          text-wrap: nowrap;
+        }
+      }
+
+      > button {
+        position: absolute;
+        right: var(--px-16);
+        top: 50%;
+        transform: translateY(-50%);
+
+        padding: var(--px-8);
+        border-radius: var(--px-8);
+        background-color: var(--btn-danger);
+
+        font-size: var(--fs-10);
+        color: var(--platinum-gray);
+        cursor: pointer;
+
+        display: none;
+      }
+      > button:hover {
+        background-color: var(--signal-orange);
+      }
+    }
+
+    .menuButton {
+      display: none;
+    }
   }
 }

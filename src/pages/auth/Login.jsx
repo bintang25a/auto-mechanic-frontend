@@ -44,8 +44,13 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      await login(formData);
-      navigate("/", { replace: true });
+      const response = await login(formData);
+
+      if (response?.role === "staff" || response?.role === "admin") {
+        navigate(`/${response?.role}`, { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
     } catch (error) {
       console.error(error);
 

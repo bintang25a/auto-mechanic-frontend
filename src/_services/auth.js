@@ -39,6 +39,17 @@ export const login = async (data) => {
   }
 };
 
+export const me = async () => {
+  try {
+    const response = await API.get("/me");
+
+    return response?.data?.data;
+  } catch (error) {
+    console.log(error);
+    throw error?.response?.data;
+  }
+};
+
 // Fungsi Validasi token
 export const validateToken = async () => {
   if (typeof window === "undefined") return false;
