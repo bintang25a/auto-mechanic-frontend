@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "../components/layout/Header";
 import InteractiveBackground from "../components/background/interactiveBackground";
 import Footer from "../components/layout/Footer";
+import LoadingJump from "../components/overlay/JumpLoading";
 
 export default function AdminLayout() {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,9 +10,10 @@ export default function AdminLayout() {
   return (
     <>
       <Header setIsLoading={setIsLoading} />
-      {/* <main>Keren</main> */}
+      <main>Keren</main>
       {/* <Footer /> */}
       <InteractiveBackground />
+      {isLoading && <LoadingJump />}
     </>
   );
 }

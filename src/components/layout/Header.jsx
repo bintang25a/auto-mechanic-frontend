@@ -183,9 +183,14 @@ export default function Header({ setIsLoading }) {
         </h1>
       </div>
 
-      <button className={styles.menuButton} onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <MdClose /> : <MdMenu />}
-      </button>
+      {isTablet && (
+        <button
+          className={styles.menuButton}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <MdClose /> : <MdMenu />}
+        </button>
+      )}
 
       {!isLogin ? (
         <UnsignedNavbar isOpen={isOpen} />

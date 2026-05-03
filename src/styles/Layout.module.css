@@ -206,7 +206,7 @@
   .header {
     align-items: center;
 
-    > :global(.navbar) {
+    .navbar {
       flex: 1;
       flex-direction: row;
       justify-content: center;
@@ -215,29 +215,19 @@
 
       a {
         width: fit-content;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         gap: var(--px-4);
 
         padding: var(--px-4);
         border-radius: var(--px-8);
-        border-bottom: 2px solid var(--steel-blue);
-        background-color: var(--platinum-gray);
+        border: none;
+        background-color: transparent;
 
         font-size: var(--fs-4);
         text-wrap: nowrap;
-
-        cursor: pointer;
-      }
-      a:hover {
-        background-color: var(--signal-orange);
-      }
-      a:active {
-        transform: scale(0.9);
+        color: var(--platinum-gray);
       }
     }
-    > :global(.navbar:not(.open)) {
+    .navbar:not(:global(.open)) {
       height: fit-content;
     }
 
@@ -291,10 +281,6 @@
       > button:hover {
         background-color: var(--signal-orange);
       }
-    }
-
-    .menuButton {
-      display: none;
     }
   }
 }
