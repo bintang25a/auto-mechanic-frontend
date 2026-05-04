@@ -215,7 +215,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--px-128) var(--px-8);
+    padding: var(--px-64) var(--px-8);
 
     .authContainer {
       gap: var(--px-32);

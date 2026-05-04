@@ -174,11 +174,12 @@ h6 {
 
 #root {
   width: 100%;
-  height: 100%;
+  height: fit-content;
   min-height: 100vh;
 
   display: flex;
   flex-direction: column;
+  justify-content: center;
 
   position: relative;
   padding: 0 var(--px-32);
@@ -186,6 +187,7 @@ h6 {
 
 @media screen and (min-width: 768px) {
   #root {
+    height: 100vh;
     padding: 0;
   }
 }

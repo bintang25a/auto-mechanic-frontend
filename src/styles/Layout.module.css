@@ -334,8 +334,9 @@
 
   .main {
     flex: 1;
-    height: fit-content;
+    height: auto;
     display: flex;
+    overflow: hidden;
   }
 
   .aside {
@@ -381,7 +382,7 @@
           font-weight: 400;
           color: var(--gray-300);
           text-shadow: 2px 1px 4px var(--gray-700);
-          
+
           > a {
             font-size: var(--fs-4);
             font-weight: 400;
