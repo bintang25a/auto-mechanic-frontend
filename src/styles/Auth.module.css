@@ -7,8 +7,9 @@
   align-items: center;
   padding: var(--px-128) var(--px-8);
 
-  :global(.auth-container) {
+  .authContainer {
     width: 100%;
+    max-width: 720px;
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(4px);
     border-radius: var(--px-16);
@@ -22,7 +23,7 @@
     padding: var(--px-64) var(--px-32);
     padding-bottom: 0;
 
-    header {
+    > header {
       width: 100%;
       display: flex;
       justify-content: center;
@@ -30,7 +31,7 @@
       flex-direction: column;
       gap: var(--px-24);
 
-      :global(.logo) {
+      .logo {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -67,11 +68,11 @@
       }
     }
 
-    form {
+    > form {
       width: 100%;
     }
 
-    form :global(.form-container) {
+    > form .formContainer {
       width: 100%;
 
       display: flex;
@@ -80,7 +81,7 @@
       align-items: center;
       gap: var(--px-40);
 
-      :global(.input-container) {
+      .inputContainer {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -115,19 +116,22 @@
           font-size: var(--fs-6);
           font-weight: 500;
           color: var(--gray-500);
+
+          cursor: text;
         }
 
         input:focus + label,
         input:not(:placeholder-shown) + label {
           opacity: 0;
+          z-index: -1;
         }
       }
-      :global(.input-container:has(input[type="file"])) {
-        input {
+      .inputContainer:has(input[type="file"]) {
+        > input {
           display: none;
         }
 
-        label {
+        > label {
           aspect-ratio: 1/1;
           width: 50%;
           max-width: var(--px-256);
@@ -155,16 +159,16 @@
             object-fit: cover;
           }
         }
-        label:hover {
+        > label:hover {
           transform: scale(1.025);
           background-color: var(--platinum-gray);
         }
-        label:active {
+        > label:active {
           transform: scale(0.9);
         }
       }
 
-      button {
+      > button {
         width: 100%;
         padding: var(--px-8);
 
@@ -182,11 +186,11 @@
 
         cursor: pointer;
       }
-      button:hover {
+      > button:hover {
         transform: scale(1.025);
         background-color: var(--steel-blue);
       }
-      button:active {
+      > button:active {
         transform: scale(0.8);
       }
     }
@@ -198,6 +202,59 @@
 
       a {
         color: var(--platinum-gray);
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .main {
+    width: 100%;
+    height: fit-content;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--px-128) var(--px-8);
+
+    .authContainer {
+      gap: var(--px-32);
+
+      > header {
+        gap: var(--px-16);
+
+        .logo {
+          > img {
+            width: var(--px-40);
+          }
+
+          > h1 {
+            font-size: var(--fs-8);
+          }
+        }
+      }
+
+      form .formContainer {
+        .inputContainer {
+          > input {
+            font-size: var(--fs-5);
+          }
+
+          > label {
+            font-size: var(--fs-5);
+          }
+        }
+        .inputContainer:has(input[type="file"]) {
+          > label {
+            width: 25%;
+            font-size: var(--fs-4);
+          }
+        }
+
+        > button {
+          gap: var(--px-8);
+          font-size: var(--fs-5);
+        }
       }
     }
   }

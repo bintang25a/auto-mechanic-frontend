@@ -68,9 +68,9 @@ export default function Login() {
   return (
     <>
       <main className={styles.main}>
-        <div className="auth-container">
+        <div className={styles.authContainer}>
           <header>
-            <div className="logo">
+            <div className={styles.logo}>
               <img src={logo} alt="Logo" />
               <h1>
                 Auto<span>Mechanic</span>
@@ -79,8 +79,8 @@ export default function Login() {
             <h2>Login</h2>
           </header>
           <form onSubmit={handleSubmit} autoComplete="off">
-            <div className="form-container">
-              <div className="input-container">
+            <div className={styles.formContainer}>
+              <div className={styles.inputContainer}>
                 <input
                   type="email"
                   name="email"
@@ -94,7 +94,7 @@ export default function Login() {
                   <FaEnvelope /> Email
                 </label>
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="password"
                   name="password"

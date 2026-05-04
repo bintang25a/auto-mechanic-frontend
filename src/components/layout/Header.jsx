@@ -1,90 +1,22 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   MdAppRegistration,
   MdClose,
   MdDashboard,
   MdHistory,
   MdHome,
-  MdLogin,
   MdLogout,
   MdMenu,
   MdPerson,
-  MdPersonAddAlt,
   MdPublishedWithChanges,
 } from "react-icons/md";
 import logo from "/images/logo/logo-nobg.png";
 import styles from "../../styles/Layout.module.css";
-import { logout, me } from "../../_services/auth";
-
-function Profile({ children, user }) {
-  return (
-    <div className={styles?.profile}>
-      <div className="photo">
-        {user?.photo ? <img src="" alt="Photo" /> : "Photo"}
-      </div>
-
-      <div className="text">
-        <h2>{user?.name}</h2>
-        <span>
-          {user?.role} || {user?.email}
-        </span>
-      </div>
-
-      {children}
-    </div>
-  );
-}
-
-function UnsignedNavbar({ isOpen }) {
-  return (
-    <nav className={`${styles.navbar} ${isOpen && "open"}`}>
-      <Link to={"/login"}>
-        <MdLogin />
-        Login
-      </Link>
-      <Link to={"/register"}>
-        <MdPersonAddAlt />
-        Register
-      </Link>
-    </nav>
-  );
-}
-
-function SignedNavbar({ isOpen, isTablet, user, handleLogout }) {
-  return (
-    <nav className={`${styles.navbar} ${isOpen && "open"}`}>
-      {isTablet && (
-        <Profile user={user}>
-          <button title="logout" onClick={handleLogout}>
-            <MdLogout />
-          </button>
-        </Profile>
-      )}
-
-      <Link to={"/"}>
-        <MdHome /> Home
-      </Link>
-      {(user?.role === "admin" || user?.role === "staff") && (
-        <Link to={`/${user?.role}`}>
-          <MdDashboard /> Dashboard
-        </Link>
-      )}
-      <Link to={"/service"}>
-        <MdAppRegistration /> Service Application
-      </Link>
-      <Link to={"/service/status"}>
-        <MdPublishedWithChanges /> Service Status
-      </Link>
-      <Link to={"/service/history"}>
-        <MdHistory /> Service History
-      </Link>
-      <Link to={"/profile"}>
-        <MdPerson /> Profile
-      </Link>
-    </nav>
-  );
-}
+import { logout } from "../../_services/auth";
+import NavbarUnsigned from "./NavbarUnsigned";
+import NavbarSigned from "./NavbarSigned";
+import NavbarAdmin from "./NavbarAdmin";
 
 export default function Header({ setIsLoading }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -114,17 +46,10 @@ export default function Header({ setIsLoading }) {
       const token = localStorage.getItem("token");
       const localUser = localStorage.getItem("user");
       const parseUser = localUser ? JSON.parse(localUser) : {};
-      const resUser = await me();
 
       if (token) {
-        setIsLogin(true);
-      }
-
-      if (token && parseUser?.role === resUser?.role) {
         setUser(parseUser);
-      } else {
-        setUser(resUser);
-        localStorage.setItem("user", JSON.stringify(resUser));
+        setIsLogin(true);
       }
 
       setTimeout(() => setIsLoading(false), 500);
@@ -134,19 +59,6 @@ export default function Header({ setIsLoading }) {
 
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const resUser = await me();
-
-      if ((resUser?.role !== user?.role) & user) {
-        localStorage.setItem("user", JSON.stringify(resUser));
-        alert(user?.role);
-      }
-    };
-
-    fetchUser();
-  }, [user]);
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -174,9 +86,20 @@ export default function Header({ setIsLoading }) {
     };
   }, []);
 
+  const path = useLocation();
+
+  const style = {
+    header: `${styles.header} ${isScrolled ? styles.scrolled : ""}`,
+    menuButton: styles.menuButton,
+    profile: !isTablet ? styles?.profile : styles.profileOff,
+    logo: styles.logo,
+    photo: styles.photo,
+    text: styles.text,
+  };
+
   return (
-    <header className={`${styles.header} ${isScrolled ? styles.scrolled : ""}`}>
-      <div className={styles.logo}>
+    <header className={style.header}>
+      <div className={style.logo}>
         <img src={logo} alt="Logo" />
         <h1>
           Auto<span>Mechanic</span>
@@ -184,26 +107,36 @@ export default function Header({ setIsLoading }) {
       </div>
 
       {isTablet && (
-        <button
-          className={styles.menuButton}
-          onClick={() => setIsOpen(!isOpen)}
-        >
+        <button className={style.menuButton} onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <MdClose /> : <MdMenu />}
         </button>
       )}
 
       {!isLogin ? (
-        <UnsignedNavbar isOpen={isOpen} />
-      ) : (
-        <SignedNavbar
+        <NavbarUnsigned isOpen={isOpen} />
+      ) : !path?.pathname?.includes("admin") ? (
+        <NavbarSigned
           isOpen={isOpen}
           isTablet={isTablet}
           user={user}
           handleLogout={handleLogout}
         />
+      ) : (
+        <NavbarAdmin />
       )}
 
-      {!isTablet && <Profile user={user} />}
+      <div className={style.profile}>
+        <div className={style.photo}>
+          {user?.photo ? <img src="" alt="Photo" /> : "Photo"}
+        </div>
+
+        <div className={style.text}>
+          <h2>{user?.name}</h2>
+          <span>
+            {user?.role?.toUpperCase()} {isTablet && user?.email}
+          </span>
+        </div>
+      </div>
     </header>
   );
 }

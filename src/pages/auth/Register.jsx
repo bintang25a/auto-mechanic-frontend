@@ -122,9 +122,9 @@ export default function Register() {
   return (
     <>
       <main className={styles.main}>
-        <div className="auth-container">
+        <div className={styles.authContainer}>
           <header>
-            <div className="logo">
+            <div className={styles.logo}>
               <img src={logo} alt="Logo" />
               <h1>
                 Auto<span>Mechanic</span>
@@ -133,8 +133,8 @@ export default function Register() {
             <h2>Register</h2>
           </header>
           <form onSubmit={handleSubmit} autoComplete="off">
-            <div className="form-container">
-              <div className="input-container">
+            <div className={styles.formContainer}>
+              <div className={styles.inputContainer}>
                 <label htmlFor="photo">
                   {formData?.photoPreview ? (
                     <img
@@ -156,7 +156,7 @@ export default function Register() {
                   onChange={handleChange}
                 />
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="text"
                   name="uid"
@@ -170,7 +170,7 @@ export default function Register() {
                   <FaUser /> Username
                 </label>
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="text"
                   name="name"
@@ -185,7 +185,7 @@ export default function Register() {
                   <FaIdCard /> Full Name
                 </label>
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="email"
                   name="email"
@@ -199,7 +199,7 @@ export default function Register() {
                   <FaEnvelope /> Email
                 </label>
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="numeric"
                   name="phone_number"
@@ -213,7 +213,7 @@ export default function Register() {
                   <FaWhatsapp /> Whatsapp Number
                 </label>
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="password"
                   name="password"
@@ -228,7 +228,7 @@ export default function Register() {
                   <FaLock /> Password
                 </label>
               </div>
-              <div className="input-container">
+              <div className={styles.inputContainer}>
                 <input
                   type="password"
                   name="confirmPass"

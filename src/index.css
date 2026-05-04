@@ -57,6 +57,7 @@
 }
 
 ::-webkit-scrollbar {
+  min-width: 8px;
   width: var(--px-8);
   height: var(--px-4);
 }
@@ -65,7 +66,7 @@
   border-radius: var(--px-16);
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--gray-600);
+  background-color: var(--signal-orange);
   border-radius: var(--px-16);
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -185,6 +186,6 @@ h6 {
 
 @media screen and (min-width: 768px) {
   #root {
-    padding: 0 var(--px-128);
+    padding: 0;
   }
 }

@@ -1,0 +1,31 @@
+import { Link } from "react-router-dom";
+import { MdHome, MdLogout, MdRefresh } from "react-icons/md";
+import styles from "../../styles/Layout.module.css";
+import { logout } from "../../_services/auth";
+
+export default function NavbarAdmin() {
+  const style = {
+    navbar: `${styles.navbar} ${styles.navAdmin}`,
+    container: styles.container,
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  return (
+    <nav className={style.navbar}>
+      <div className={style.container}>
+        <Link title="Dashboard" to={"/"}>
+          <MdHome />
+        </Link>
+        <button title="Refresh" onClick={() => alert("Refreshed")}>
+          <MdRefresh />
+        </button>
+        <button title="Logout" onClick={handleLogout}>
+          <MdLogout />
+        </button>
+      </div>
+    </nav>
+  );
+}
