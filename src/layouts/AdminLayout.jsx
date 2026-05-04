@@ -5,6 +5,7 @@ import Footer from "../components/layout/Footer";
 import LoadingJump from "../components/overlay/JumpLoading";
 import styles from "../styles/Layout.module.css";
 import Sidebar from "../components/layout/Sidebar";
+import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,7 @@ export default function AdminLayout() {
       <Header setIsLoading={setIsLoading} />
       <main className={styles.main}>
         <Sidebar />
-        <div className={styles.content}>Keren</div>
+        <Outlet context={{ setIsLoading }} />
       </main>
       <Footer />
       <InteractiveBackground />

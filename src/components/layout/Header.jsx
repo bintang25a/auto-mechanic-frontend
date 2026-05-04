@@ -122,7 +122,7 @@ export default function Header({ setIsLoading }) {
           handleLogout={handleLogout}
         />
       ) : (
-        <NavbarAdmin />
+        <NavbarAdmin handleLogout={handleLogout} />
       )}
 
       <div className={style.profile}>

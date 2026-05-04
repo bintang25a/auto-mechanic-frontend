@@ -1,16 +1,11 @@
 import { Link } from "react-router-dom";
 import { MdHome, MdLogout, MdRefresh } from "react-icons/md";
 import styles from "../../styles/Layout.module.css";
-import { logout } from "../../_services/auth";
 
-export default function NavbarAdmin() {
+export default function NavbarAdmin({handleLogout}) {
   const style = {
     navbar: `${styles.navbar} ${styles.navAdmin}`,
     container: styles.container,
-  };
-
-  const handleLogout = async () => {
-    await logout();
   };
 
   return (

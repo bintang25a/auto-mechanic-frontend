@@ -3,6 +3,8 @@ import LandingPage from "./pages";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./pages/admin";
+import User from "./pages/admin/User";
 
 export default function App() {
   return (
@@ -13,7 +15,10 @@ export default function App() {
         <Route path="login" element={<Login />} />
 
         <Route path="staff" element={<main>Admin</main>} />
-        <Route path="admin" element={<AdminLayout />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="users" element={<User />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

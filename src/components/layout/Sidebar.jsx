@@ -17,10 +17,10 @@ export default function Sidebar() {
 
         <ul>
           <li>
-            <Link to={"/admin"}>Current Queue</Link>
+            <Link to={"/admin"}>Data Count</Link>
           </li>
           <li>
-            <Link to={"/admin"}>Data Count</Link>
+            <Link to={"/admin"}>Current Queue</Link>
           </li>
           <li>
             <Link to={"/admin"}>Top Damage</Link>
