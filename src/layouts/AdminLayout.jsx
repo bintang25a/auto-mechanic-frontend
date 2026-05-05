@@ -6,20 +6,34 @@ import LoadingJump from "../components/overlay/JumpLoading";
 import styles from "../styles/Layout.module.css";
 import Sidebar from "../components/layout/Sidebar";
 import { Outlet } from "react-router-dom";
+import InfoModal from "../components/overlay/InfoModal";
 
 export default function AdminLayout() {
   const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    isError: false,
+    title: "",
+    message: "",
+  });
 
   return (
     <>
       <Header setIsLoading={setIsLoading} />
       <main className={styles.main}>
         <Sidebar />
-        <Outlet context={{ setIsLoading }} />
+        <Outlet context={{ setIsLoading, setModal }} />
       </main>
       <Footer />
-      <InteractiveBackground />
       {isLoading && <LoadingJump />}
+      <InfoModal
+        isOpen={modal?.isOpen}
+        isError={modal?.isError}
+        onClose={() => setModal({ isOpen: false })}
+        title={modal?.title}
+        message={modal?.message}
+      />
+      <InteractiveBackground />
     </>
   );
 }

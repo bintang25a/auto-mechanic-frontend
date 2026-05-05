@@ -62,7 +62,9 @@
   text-align: center;
   box-shadow: 0 10px 25px var(--gray-400);
   animation: modalPop 0.3s ease-out;
+}
 
+.infoModal {
   :global(.icon-header) {
     margin-bottom: var(--px-16);
     color: var(--btn-info);
@@ -73,14 +75,14 @@
 
   > h2 {
     margin-bottom: var(--px-16);
-    font-size: var(--fs-9);
+    font-size: var(--fs-8);
     font-weight: 700;
     color: var(--midnight-blue);
   }
 
   > p {
     margin-bottom: var(--px-32);
-    font-size: var(--fs-7);
+    font-size: var(--fs-6);
     font-weight: 400;
     color: var(--gray-600);
     line-height: 1.5;
@@ -91,7 +93,7 @@
     background: var(--btn-info);
     color: var(--platinum-gray);
     border: none;
-    padding: var(--px-16) var(--px-32);
+    padding: var(--px-8) var(--px-12);
     border-radius: var(--px-12);
 
     display: inline-flex;
@@ -99,7 +101,7 @@
     align-items: center;
     gap: var(--px-16);
 
-    font-size: var(--fs-8);
+    font-size: var(--fs-6);
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
@@ -109,6 +111,108 @@
   }
   > button:active {
     transform: scale(0.98);
+  }
+}
+
+.formModal {
+  position: relative;
+
+  > form {
+    display: flex;
+  }
+
+  > h2 {
+    font-size: var(--fs-6);
+    font-weight: 700;
+    color: var(--steel-blue);
+  }
+
+  > button {
+    position: absolute;
+    top: var(--px-24);
+    right: var(--px-24);
+
+    font-size: var(--fs-6);
+    color: var(--white);
+    background-color: var(--btn-danger);
+
+    padding: var(--px-8);
+    border-radius: 100%;
+
+    cursor: pointer;
+  }
+  > button:active {
+    transform: scale(0.9);
+  }
+
+  .formContainer {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: var(--px-8);
+
+    .inputContainer {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: var(--px-4);
+
+      > input,
+      > select {
+        width: 100%;
+        padding: var(--px-4) var(--px-12);
+        background-color: var(--gray-200);
+        border: 1px solid var(--midnight-blue);
+        border-radius: var(--px-8);
+
+        font-size: var(--fs-4);
+        font-weight: 500;
+      }
+      > label {
+        font-size: var(--fs-5);
+        font-weight: 500;
+        color: var(--midnight-blue);
+      }
+
+      > label:hover,
+      > select:hover {
+        cursor: pointer;
+      }
+    }
+
+    > button {
+      width: 100%;
+      background-color: var(--steel-blue);
+      padding: var(--px-8);
+      margin-top: var(--px-12);
+
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: var(--px-8);
+
+      border-radius: var(--px-12);
+      cursor: pointer;
+
+      font-size: var(--fs-5);
+      font-weight: 600;
+      color: var(--platinum-gray);
+      box-shadow: 1px 0px 5px var(--gray-600);
+    }
+    > button:hover {
+      transform: scale(1.025);
+      background-color: var(--signal-orange);
+    }
+    > button:active {
+      transform: scale(0.9);
+    }
   }
 }
 

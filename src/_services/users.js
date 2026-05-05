@@ -22,7 +22,7 @@ export const createUser = async (data) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };
 

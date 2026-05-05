@@ -6,7 +6,7 @@ const InfoModal = ({ isOpen, isError, onClose, title, message }) => {
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal}>
+      <div className={`${styles.modal} ${styles?.infoModal}`}>
         <div className={`icon-header ${isError && "error"}`}>
           {isError ? <MdWarning size={40} /> : <MdInfo size={40} />}
         </div>

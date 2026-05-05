@@ -3,16 +3,16 @@ import {
   MdDelete,
   MdEdit,
   MdSearch,
-  MdViewAgenda,
   MdVisibility,
 } from "react-icons/md";
 import styles from "../../styles/Admin.module.css";
 import { useEffect, useState } from "react";
-import { getUsers } from "../../_services/users";
+import { createUser, getUsers } from "../../_services/users";
 import { useOutletContext } from "react-router-dom";
+import FormModal from "../../components/overlay/FormModal";
 
 export default function User() {
-  const { setIsLoading } = useOutletContext();
+  const { setIsLoading, setModal } = useOutletContext();
 
   const columns = ["uid", "name", "email", "phone_number", "role"];
   const [users, setUsers] = useState([]);
@@ -91,7 +91,103 @@ export default function User() {
       month: "long",
       day: "numeric",
     };
+
     return date.toLocaleDateString("id-ID", options);
+  };
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const fields = [
+    {
+      name: "photo",
+      label: "Photo",
+      type: "file",
+    },
+    {
+      name: "uid",
+      label: "UID",
+      type: "text",
+    },
+    {
+      name: "name",
+      label: "Name",
+      type: "text",
+    },
+    {
+      name: "email",
+      label: "Email",
+      type: "email",
+    },
+    {
+      name: "phone_number",
+      label: "Whatsapp Number",
+      type: "numeric",
+    },
+    {
+      name: "role",
+      label: "Select Role",
+      type: "select",
+      options: [
+        {
+          name: "Admin",
+          value: "admin",
+        },
+        {
+          name: "Staff",
+          value: "staff",
+        },
+        {
+          name: "Customer",
+          value: "customer",
+        },
+      ],
+    },
+    {
+      name: "password",
+      label: "Password",
+      type: "text",
+    },
+  ];
+
+  const handleSubmit = async (e, formData) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const payload = new FormData();
+
+    payload.append("uid", formData?.uid);
+    payload.append("name", formData?.name);
+    payload.append("email", formData?.email);
+    payload.append("phone_number", formData?.phone_number);
+    payload.append("password", formData?.password);
+    payload.append("role", formData?.role);
+
+    if (formData.photo) {
+      payload.append("photo", formData?.photo);
+    }
+
+    try {
+      const response = await createUser(payload);
+
+      setModal({
+        isOpen: true,
+        title: response?.message,
+        message: "",
+      });
+
+      setModalOpen(false);
+    } catch (error) {
+      console.error(error?.response?.message);
+
+      setModal({
+        isOpen: true,
+        isError: true,
+        title: "Create data failed",
+        message: error?.message,
+      });
+    } finally {
+      setTimeout(() => setIsLoading(false), 250);
+    }
   };
 
   return (
@@ -123,14 +219,18 @@ export default function User() {
               <MdSearch />
             </button>
 
-            <button type="button" title="Add Data">
+            <button
+              type="button"
+              title="Add Data"
+              onClick={() => setModalOpen(true)}
+            >
               <MdAddBox />
             </button>
           </div>
         </form>
       </header>
 
-      <main className={styles.main} onScroll={() => console.log("KERENNN")}>
+      <main className={styles.main}>
         <div className={styles.tableContainer}>
           <table>
             <thead>
@@ -186,6 +286,14 @@ export default function User() {
           Next Page
         </button>
       </footer>
+
+      {modalOpen && (
+        <FormModal
+          fields={fields}
+          onClose={() => setModalOpen()}
+          onSubmit={handleSubmit}
+        />
+      )}
     </div>
   );
 }
