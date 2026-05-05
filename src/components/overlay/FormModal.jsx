@@ -2,11 +2,12 @@ import { useState } from "react";
 import styles from "../../styles/Component.module.css";
 import { MdClose, MdSend } from "react-icons/md";
 import { FaPaperPlane } from "react-icons/fa6";
+import { getPhoto } from "../../_services/files";
 
-export default function FormModal({ fields, onSubmit, onClose }) {
+export default function FormModal({ fields, data, onSubmit, onClose, isView }) {
   const [formData, setFormData] = useState(() => {
     return fields.reduce((acc, field) => {
-      acc[field.name] = "";
+      acc[field.name] = data ? data[field?.name] : "";
       return acc;
     }, {});
   });
@@ -48,6 +49,7 @@ export default function FormModal({ fields, onSubmit, onClose }) {
                       onChange={handleChange}
                       value={formData[field?.name]}
                       required
+                      disabled={isView}
                     >
                       <option value="">{field?.label}</option>
                       {field?.options?.map((option, i) => (
@@ -57,6 +59,12 @@ export default function FormModal({ fields, onSubmit, onClose }) {
                       ))}
                     </select>
                   </>
+                ) : field?.type === "file" &&
+                  field?.name === "photo" &&
+                  isView ? (
+                  <>
+                    <img src={getPhoto(formData[field?.name])} alt="" />
+                  </>
                 ) : (
                   <>
                     <label htmlFor={field?.name}>{field?.label}</label>
@@ -65,15 +73,22 @@ export default function FormModal({ fields, onSubmit, onClose }) {
                       name={field?.name}
                       id={field?.name}
                       onChange={handleChange}
-                      value={formData[field?.name]}
-                      required={field?.type !== "file"}
+                      value={
+                        field?.type !== "file" ? formData[field?.name] : null
+                      }
+                      required={
+                        (field?.type !== "file" ||
+                          field?.name === "password") &&
+                        !data
+                      }
+                      disabled={isView}
                     />
                   </>
                 )}
               </div>
             ))}
 
-            <button type="submit">
+            <button type="submit" disabled={isView}>
               Submit <FaPaperPlane />
             </button>
           </div>

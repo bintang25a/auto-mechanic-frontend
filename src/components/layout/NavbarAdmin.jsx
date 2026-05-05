@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { MdHome, MdLogout, MdRefresh } from "react-icons/md";
 import styles from "../../styles/Layout.module.css";
 
-export default function NavbarAdmin({handleLogout}) {
+export default function NavbarAdmin({ handleLogout, setRefresh }) {
   const style = {
     navbar: `${styles.navbar} ${styles.navAdmin}`,
     container: styles.container,
@@ -14,7 +14,7 @@ export default function NavbarAdmin({handleLogout}) {
         <Link title="Dashboard" to={"/"}>
           <MdHome />
         </Link>
-        <button title="Refresh" onClick={() => alert("Refreshed")}>
+        <button title="Refresh" onClick={() => setRefresh((prev) => !prev)}>
           <MdRefresh />
         </button>
         <button title="Logout" onClick={handleLogout}>

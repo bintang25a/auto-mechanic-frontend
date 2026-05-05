@@ -132,6 +132,8 @@
 
         > tbody {
           > tr {
+            cursor: pointer;
+
             > td {
               font-size: var(--fs-4);
               font-weight: 400;

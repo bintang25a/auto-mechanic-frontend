@@ -229,3 +229,10 @@
     transform: scale(1.025);
   }
 }
+
+@media screen and (min-width: 768px) {
+  .main {
+    padding: 0 var(--px-128);
+    padding-top: var(--px-64);
+  }
+}

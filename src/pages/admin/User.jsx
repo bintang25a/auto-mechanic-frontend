@@ -7,12 +7,19 @@ import {
 } from "react-icons/md";
 import styles from "../../styles/Admin.module.css";
 import { useEffect, useState } from "react";
-import { createUser, getUsers } from "../../_services/users";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  showUser,
+  updateUser,
+} from "../../_services/users";
 import { useOutletContext } from "react-router-dom";
 import FormModal from "../../components/overlay/FormModal";
 
 export default function User() {
-  const { setIsLoading, setModal } = useOutletContext();
+  const { setIsLoading, setInfoModal, setConfirmModal, refresh } =
+    useOutletContext();
 
   const columns = ["uid", "name", "email", "phone_number", "role"];
   const [users, setUsers] = useState([]);
@@ -27,7 +34,7 @@ export default function User() {
     const fetchData = async () => {
       setIsLoading(true);
 
-      const [usersData] = await Promise.all([getUsers("")]);
+      const [usersData] = await Promise.all([getUsers(`page=${currentPage}`)]);
 
       setUsers(usersData?.data);
       setCurrentPage(usersData?.current_page);
@@ -38,7 +45,7 @@ export default function User() {
 
     fetchData();
     // eslint-disable-next-line
-  }, []);
+  }, [refresh]);
 
   const handleSearchChange = (e) => {
     const { name, value } = e.target;
@@ -149,6 +156,30 @@ export default function User() {
     },
   ];
 
+  const [isView, setIsView] = useState(false);
+  const [editData, setEditData] = useState(false);
+  const handleFetchUser = async (id, view = false) => {
+    setIsLoading(true);
+
+    try {
+      const response = await showUser(id);
+
+      setIsView(view ? true : false);
+      setEditData(response?.data);
+    } catch (error) {
+      setInfoModal({
+        isOpen: true,
+        isError: true,
+        title: "Get data failed",
+        message: error?.message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+
+    setModalOpen(true);
+  };
+
   const handleSubmit = async (e, formData) => {
     e.preventDefault();
     setIsLoading(true);
@@ -159,27 +190,50 @@ export default function User() {
     payload.append("name", formData?.name);
     payload.append("email", formData?.email);
     payload.append("phone_number", formData?.phone_number);
-    payload.append("password", formData?.password);
     payload.append("role", formData?.role);
 
-    if (formData.photo) {
+    if (formData?.password) {
+      payload.append("password", formData?.password);
+    }
+
+    if (formData?.photo) {
       payload.append("photo", formData?.photo);
     }
 
-    try {
-      const response = await createUser(payload);
+    if (editData) {
+      payload.append("_method", "PUT");
+    }
 
-      setModal({
+    try {
+      const response = !editData
+        ? await createUser(payload)
+        : await updateUser(editData?.uid, payload);
+
+      if (editData) {
+        const tempUsers = [...users];
+
+        const userIdx = tempUsers.findIndex(
+          (user) => user?.uid === editData?.uid
+        );
+
+        if (userIdx !== -1) {
+          tempUsers[userIdx] = response?.data;
+          setUsers(tempUsers);
+        }
+      }
+
+      setInfoModal({
         isOpen: true,
-        title: response?.message,
-        message: "",
+        title: "Success",
+        message: response?.message,
       });
 
+      setEditData(false);
       setModalOpen(false);
     } catch (error) {
       console.error(error?.response?.message);
 
-      setModal({
+      setInfoModal({
         isOpen: true,
         isError: true,
         title: "Create data failed",
@@ -188,6 +242,54 @@ export default function User() {
     } finally {
       setTimeout(() => setIsLoading(false), 250);
     }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setEditData(false);
+    setIsView(false);
+  };
+
+  const handleDelete = (id) => {
+    const onSubmit = async () => {
+      setConfirmModal({});
+      setIsLoading(true);
+
+      try {
+        const response = await deleteUser(id);
+
+        setUsers(users?.filter((u) => u?.uid !== id));
+
+        setInfoModal({
+          isOpen: true,
+          title: "Success",
+          message: response?.message,
+        });
+      } catch (error) {
+        console.error(error?.response?.message);
+
+        setInfoModal({
+          isOpen: true,
+          isError: true,
+          title: "Create data failed",
+          message: error?.message,
+        });
+      } finally {
+        setTimeout(() => setIsLoading(false), 250);
+      }
+    };
+
+    const onCancel = () => {
+      setConfirmModal({});
+    };
+
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete Data",
+      message: `Are you sure delete user with id: ${id}? Deleted data can't be recovery`,
+      onSubmit,
+      onCancel,
+    });
   };
 
   return (
@@ -246,7 +348,11 @@ export default function User() {
             </thead>
             <tbody>
               {users?.map((user) => (
-                <tr key={user?.uid}>
+                <tr
+                  key={user?.uid}
+                  onDoubleClick={() => handleFetchUser(user?.uid, true)}
+                  title="Double click to view"
+                >
                   <td>{user?.uid}</td>
                   <td>{user?.name}</td>
                   <td>{user?.email}</td>
@@ -254,13 +360,22 @@ export default function User() {
                   <td>{user?.role}</td>
                   <td>{formatedDate(user?.email_verified_at)}</td>
                   <td>
-                    <button title="View">
+                    <button
+                      title="View"
+                      onClick={() => handleFetchUser(user?.uid, true)}
+                    >
                       <MdVisibility />
                     </button>
-                    <button title="Edit">
+                    <button
+                      title="Edit"
+                      onClick={() => handleFetchUser(user?.uid)}
+                    >
                       <MdEdit />
                     </button>
-                    <button title="Delete">
+                    <button
+                      title="Delete"
+                      onClick={() => handleDelete(user?.uid)}
+                    >
                       <MdDelete />
                     </button>
                   </td>
@@ -290,8 +405,10 @@ export default function User() {
       {modalOpen && (
         <FormModal
           fields={fields}
-          onClose={() => setModalOpen()}
+          data={editData}
+          onClose={handleModalClose}
           onSubmit={handleSubmit}
+          isView={isView}
         />
       )}
     </div>

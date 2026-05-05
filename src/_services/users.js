@@ -1,5 +1,4 @@
 import API from "../_api";
-import message from "../_utilities/errorMessage";
 
 export const getUsers = async (query) => {
   const { data } = await API.get(`/users?${query}`);
@@ -9,10 +8,10 @@ export const getUsers = async (query) => {
 export const showUser = async (id) => {
   try {
     const { data } = await API.get(`/users/${id}`);
-    return data.data;
+    return data;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };
 
@@ -32,7 +31,7 @@ export const updateUser = async (id, data) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };
 
@@ -42,6 +41,6 @@ export const deleteUser = async (id) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    throw message(error);
+    throw error?.response?.data;
   }
 };

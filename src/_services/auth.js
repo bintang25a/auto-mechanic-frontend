@@ -27,6 +27,7 @@ export const login = async (data) => {
       email: resData?.email,
       phone_number: resData?.phone_number,
       role: resData?.role,
+      photo: resData?.photo,
     };
 
     localStorage.setItem("token", token);

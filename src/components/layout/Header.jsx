@@ -1,24 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  MdAppRegistration,
-  MdClose,
-  MdDashboard,
-  MdHistory,
-  MdHome,
-  MdLogout,
-  MdMenu,
-  MdPerson,
-  MdPublishedWithChanges,
-} from "react-icons/md";
+import { useLocation, useNavigate } from "react-router-dom";
+import { MdClose, MdMenu } from "react-icons/md";
 import logo from "/images/logo/logo-nobg.png";
 import styles from "../../styles/Layout.module.css";
 import { logout } from "../../_services/auth";
 import NavbarUnsigned from "./NavbarUnsigned";
 import NavbarSigned from "./NavbarSigned";
 import NavbarAdmin from "./NavbarAdmin";
+import { getPhoto } from "../../_services/files";
 
-export default function Header({ setIsLoading }) {
+export default function Header({ setIsLoading, setRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -122,12 +113,16 @@ export default function Header({ setIsLoading }) {
           handleLogout={handleLogout}
         />
       ) : (
-        <NavbarAdmin handleLogout={handleLogout} />
+        <NavbarAdmin handleLogout={handleLogout} setRefresh={setRefresh} />
       )}
 
       <div className={style.profile}>
         <div className={style.photo}>
-          {user?.photo ? <img src="" alt="Photo" /> : "Photo"}
+          {user?.photo ? (
+            <img src={getPhoto(user?.photo)} alt="Photo" />
+          ) : (
+            "Photo"
+          )}
         </div>
 
         <div className={style.text}>
