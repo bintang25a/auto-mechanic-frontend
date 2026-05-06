@@ -1,36 +1,46 @@
 import { useEffect, useState } from "react";
-import { MdAddBox, MdSearch } from "react-icons/md";
 import { useOutletContext } from "react-router-dom";
 import FormModal from "../../components/overlay/FormModal";
-import { createRule, deleteRule, getRules } from "../../_services/rules";
+import { createRule, deleteRule } from "../../_services/rules";
 import { showSymptom } from "../../_services/symptoms";
 import { showDamage } from "../../_services/damages";
+import { adminPageRules } from "../../_services/page";
 import styles from "../../styles/Admin.module.css";
 
 export default function Rule() {
   const { setIsLoading, setInfoModal, refresh } = useOutletContext();
 
-  const [damages, setDamages] = useState([]);
-  const [symptoms, setSymptoms] = useState([]);
   const [rules, setRules] = useState([]);
-  const [search, setSearch] = useState({
-    key: "",
-    value: ""
+  const [search, setSearch] = useState("");
+  const [rowCol, setRowCol] = useState({
+    row: [],
+    col: [],
   });
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
 
-      const [rulesData] = await Promise.all([getRules()]);
+      const [rulesData] = await Promise.all([adminPageRules()]);
+      console.log(rulesData);
 
-      setRules(rulesData?.data);
-      setDamages([
-        ...new Set(rulesData?.data?.map((item) => item.damage_code)),
-      ]);
-      setSymptoms([
-        ...new Set(rulesData?.data?.map((item) => item.symptom_code)),
-      ]);
+      setRules(rulesData?.rules);
+
+      setRowCol({
+        row: [...(rulesData?.symptoms || [])].sort((a, b) => {
+          return a?.symptom_code?.localeCompare(b?.symptom_code, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          });
+        }),
+
+        col: [...(rulesData?.damages || [])].sort((a, b) => {
+          return a?.damage_code?.localeCompare(b?.damage_code, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          });
+        }),
+      });
 
       setTimeout(() => setIsLoading(false), 250);
     };
@@ -40,12 +50,9 @@ export default function Rule() {
   }, [refresh]);
 
   const handleSearchChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
 
-    setSearch({
-      ...search,
-      [name]: value
-    });
+    setSearch(value);
   };
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -167,18 +174,6 @@ export default function Rule() {
     }
   };
 
-  const handleSearch = () => {
-    const temp = {
-      damages: damages?.filter((d) => d?.includes(search)),
-      symptoms: symptoms?.filter((d) => d?.includes(search)),
-    };
-
-    setDamages(temp?.damages);
-    setSymptoms(temp?.symptoms);
-
-    console.log(temp);
-  };
-
   return (
     <div className={styles.userPage}>
       <header className={styles.header}>
@@ -186,9 +181,8 @@ export default function Rule() {
 
         <form>
           <div className={styles.search}>
-            <select name="key" onChange={handleSearchChange}>
-              <option value="damages">Damages</option>
-              <option value="symptoms">Symptoms</option>
+            <select disabled>
+              <option value="">Click Damage/Symptom Code to see detail</option>
             </select>
 
             <input
@@ -197,12 +191,8 @@ export default function Rule() {
               id="value"
               placeholder="Search data"
               onChange={handleSearchChange}
-              value={search?.value}
+              value={search}
             />
-
-            <button type="button" title="Search" onClick={handleSearch}>
-              <MdSearch />
-            </button>
           </div>
         </form>
       </header>
@@ -213,24 +203,45 @@ export default function Rule() {
             <thead>
               <tr>
                 <th>Key</th>
-                {damages?.map((damage, i) => (
-                  <th key={i} onClick={() => handleFetchData(damage, true)}>
-                    {damage}
+                {rowCol?.col?.map((damage, i) => (
+                  <th
+                    key={i}
+                    onClick={() => handleFetchData(damage?.damage_code, true)}
+                  >
+                    {damage?.damage_code}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {symptoms?.map((symptom, i) => (
+              {rowCol?.row?.map((symptom, i) => (
                 <tr key={i}>
-                  <td onClick={() => handleFetchData(symptom)}>{symptom}</td>
-                  {damages?.map((damage, i) => (
+                  <td onClick={() => handleFetchData(symptom?.symptom_code)}>
+                    {symptom?.symptom_code}
+                  </td>
+                  {rowCol?.col?.map((damage, i) => (
                     <td
                       key={i}
-                      title="Double click to mark"
-                      onDoubleClick={() => handleToggleRule(symptom, damage)}
+                      title={`Double click to mark \nG: ${symptom?.name} \nK: ${damage?.name}`}
+                      onDoubleClick={() =>
+                        handleToggleRule(
+                          symptom?.symptom_code,
+                          damage?.damage_code
+                        )
+                      }
+                      className={
+                        (symptom?.symptom_code
+                          ?.toLowerCase()
+                          .includes(search?.toLowerCase()) ||
+                          damage?.damage_code
+                            ?.toLowerCase()
+                            .includes(search?.toLowerCase())) &&
+                        search
+                          ? styles.search
+                          : null
+                      }
                     >
-                      {isMatching(symptom, damage)}
+                      {isMatching(symptom?.symptom_code, damage?.damage_code)}
                     </td>
                   ))}
                 </tr>

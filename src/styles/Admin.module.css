@@ -128,6 +128,10 @@
             padding: var(--px-8) 0;
             border-bottom: var(--px-4) solid var(--signal-orange);
           }
+
+          > th:first-child {
+            border: none;
+          }
         }
 
         > tbody {
@@ -188,27 +192,42 @@
       }
 
       .rulesTable {
-        thead tr th {
+        > thead > tr > th {
           cursor: pointer;
         }
 
         tbody {
-          tr {
-            td {
+          > tr {
+            > td {
               width: fit-content !important;
               text-align: center !important;
               border: 1px solid var(--signal-orange);
               aspect-ratio: 1/1;
               padding-left: 0 !important;
+              font-weight: 800;
             }
 
-            td:hover {
+            > td:nth-child(1) {
+              border: none;
+              border-right: 2px solid var(--signal-orange);
+              background-color: var(--platinum-gray);
+
+              font-size: var(--fs-4);
+              font-weight: 600;
+              color: var(--midnight-blue);
+            }
+
+            .search {
+              background-color: var(--midnight-blue);
+            }
+
+            > td:hover {
               background-color: var(--steel-blue);
               cursor: pointer;
             }
           }
 
-          tr:hover {
+          > tr:hover {
             background-color: unset;
           }
         }
