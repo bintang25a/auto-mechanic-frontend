@@ -5,6 +5,7 @@ import Login from "./pages/auth/Login";
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin";
 import User from "./pages/admin/User";
+import Symptom from "./pages/admin/Symptom";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="users" element={<User />} />
+          <Route path="symptoms" element={<Symptom />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -144,9 +144,9 @@
               padding: var(--px-16) 0;
             }
 
-            > td:nth-child(1),
-            > td:nth-child(2),
-            > td:nth-child(3) {
+            > td:nth-child(1):not(:nth-last-child(3)),
+            > td:nth-child(2):not(:nth-last-child(2)),
+            > td:nth-child(3):not(:nth-last-child(1)) {
               text-align: left;
             }
 
