@@ -88,9 +88,11 @@ export default function FormModal({ fields, data, onSubmit, onClose, isView }) {
               </div>
             ))}
 
-            <button type="submit" disabled={isView}>
-              Submit <FaPaperPlane />
-            </button>
+            {!isView && (
+              <button type="submit" disabled={isView}>
+                Submit <FaPaperPlane />
+              </button>
+            )}
           </div>
         </form>
 

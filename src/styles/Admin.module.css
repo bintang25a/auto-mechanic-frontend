@@ -186,6 +186,33 @@
           }
         }
       }
+
+      .rulesTable {
+        thead tr th {
+          cursor: pointer;
+        }
+
+        tbody {
+          tr {
+            td {
+              width: fit-content !important;
+              text-align: center !important;
+              border: 1px solid var(--signal-orange);
+              aspect-ratio: 1/1;
+              padding-left: 0 !important;
+            }
+
+            td:hover {
+              background-color: var(--steel-blue);
+              cursor: pointer;
+            }
+          }
+
+          tr:hover {
+            background-color: unset;
+          }
+        }
+      }
     }
   }
 

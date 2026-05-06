@@ -8,21 +8,21 @@ import {
 import styles from "../../styles/Admin.module.css";
 import { useEffect, useState } from "react";
 import {
-  createSymptom,
-  deleteSymptom,
-  getSymptoms,
-  showSymptom,
-  updateSymptom,
-} from "../../_services/symptoms";
+  createDamage,
+  deleteDamage,
+  getDamages,
+  showDamage,
+  updateDamage,
+} from "../../_services/damages";
 import { useOutletContext } from "react-router-dom";
 import FormModal from "../../components/overlay/FormModal";
 
-export default function Symptom() {
+export default function Damage() {
   const { setIsLoading, setInfoModal, setConfirmModal, refresh } =
     useOutletContext();
 
-  const columns = ["symptom_code", "name"];
-  const [symptoms, setSymptoms] = useState([]);
+  const columns = ["damage_code", "name"];
+  const [damages, setDamages] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState({
@@ -34,13 +34,13 @@ export default function Symptom() {
     const fetchData = async () => {
       setIsLoading(true);
 
-      const [symptomsData] = await Promise.all([
-        getSymptoms(`page=${currentPage}`),
+      const [damagesData] = await Promise.all([
+        getDamages(`page=${currentPage}`),
       ]);
 
-      setSymptoms(symptomsData?.data);
-      setCurrentPage(symptomsData?.current_page);
-      setTotalPages(Math.ceil(Number(symptomsData?.total) / 20));
+      setDamages(damagesData?.data);
+      setCurrentPage(damagesData?.current_page);
+      setTotalPages(Math.ceil(Number(damagesData?.total) / 20));
 
       setTimeout(() => setIsLoading(false), 250);
     };
@@ -65,11 +65,11 @@ export default function Symptom() {
     const isEmpty = !search?.value || !search?.column;
     const query = isEmpty ? "" : `${search?.column}=${search?.value}`;
 
-    const [symptomsData] = await Promise.all([getSymptoms(query)]);
+    const [damagesData] = await Promise.all([getDamages(query)]);
 
-    setSymptoms(symptomsData?.data);
-    setCurrentPage(symptomsData?.current_page);
-    setTotalPages(Math.ceil(Number(symptomsData?.total) / 20));
+    setDamages(damagesData?.data);
+    setCurrentPage(damagesData?.current_page);
+    setTotalPages(Math.ceil(Number(damagesData?.total) / 20));
 
     setTimeout(() => setIsLoading(false), 250);
   };
@@ -84,12 +84,12 @@ export default function Symptom() {
         ? `${search?.column}=${search?.value}`
         : "";
 
-    const [symptomsData] = await Promise.all([
-      getSymptoms(`page=${page}&${query}`),
+    const [damagesData] = await Promise.all([
+      getDamages(`page=${page}&${query}`),
     ]);
 
     setCurrentPage(page);
-    setSymptoms(symptomsData?.data);
+    setDamages(damagesData?.data);
     setTimeout(() => setIsLoading(false), 250);
   };
 
@@ -99,8 +99,8 @@ export default function Symptom() {
 
   const fields = [
     {
-      name: "symptom_code",
-      label: "Symptom Code",
+      name: "damage_code",
+      label: "Damage Code",
       type: "text",
     },
     {
@@ -109,8 +109,8 @@ export default function Symptom() {
       type: "text",
     },
     {
-      name: "damages",
-      label: "Possible Damages Code",
+      name: "symptoms",
+      label: "Symptoms code possible",
       type: "text",
     },
   ];
@@ -119,14 +119,14 @@ export default function Symptom() {
     setIsLoading(true);
 
     try {
-      const response = await showSymptom(id);
+      const response = await showDamage(id);
       const data = response?.data;
-      const damages = response?.data?.damages;
+      const symptoms = response?.data?.symptoms;
 
       setIsView(view ? true : false);
       setEditData({
         ...data,
-        damages: damages?.map((d) => d.damage_code).join(", "),
+        symptoms: symptoms?.map((d) => d.symptom_code).join(", "),
       });
     } catch (error) {
       setInfoModal({
@@ -148,7 +148,7 @@ export default function Symptom() {
 
     const payload = new FormData();
 
-    payload.append("symptom_code", formData?.symptom_code);
+    payload.append("damage_code", formData?.damage_code);
     payload.append("name", formData?.name);
 
     if (editData) {
@@ -157,19 +157,19 @@ export default function Symptom() {
 
     try {
       const response = !editData
-        ? await createSymptom(payload)
-        : await updateSymptom(editData?.symptom_code, payload);
+        ? await createDamage(payload)
+        : await updateDamage(editData?.damage_code, payload);
 
       if (editData) {
-        const tempSymptoms = [...symptoms];
+        const tempDamages = [...damages];
 
-        const userIdx = tempSymptoms.findIndex(
-          (symptom) => symptom?.symptom_code === editData?.symptom_code
+        const userIdx = tempDamages.findIndex(
+          (symptom) => symptom?.damage_code === editData?.damage_code
         );
 
         if (userIdx !== -1) {
-          tempSymptoms[userIdx] = response?.data;
-          setSymptoms(tempSymptoms);
+          tempDamages[userIdx] = response?.data;
+          setDamages(tempDamages);
         }
       }
 
@@ -207,9 +207,9 @@ export default function Symptom() {
       setIsLoading(true);
 
       try {
-        const response = await deleteSymptom(id);
+        const response = await deleteDamage(id);
 
-        setSymptoms(symptoms?.filter((u) => u?.symptom_code !== id));
+        setDamages(damages?.filter((u) => u?.damage_code !== id));
 
         setInfoModal({
           isOpen: true,
@@ -246,7 +246,7 @@ export default function Symptom() {
   return (
     <div className={styles.userPage}>
       <header className={styles.header}>
-        <h2>Symptoms Data</h2>
+        <h2>Damages Data</h2>
 
         <form onSubmit={handleSearchSubmit}>
           <div className={styles.search}>
@@ -288,40 +288,40 @@ export default function Symptom() {
           <table>
             <thead>
               <tr>
-                <th>Symptom Code</th>
+                <th>Damage Code</th>
                 <th>Name</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {symptoms?.map((symptom) => (
+              {damages?.map((damage) => (
                 <tr
-                  key={symptom?.symptom_code}
+                  key={damage?.damage_code}
                   onDoubleClick={() =>
-                    handleFetchSymptom(symptom?.symptom_code, true)
+                    handleFetchSymptom(damage?.damage_code, true)
                   }
                   title="Double click to view"
                 >
-                  <td>{symptom?.symptom_code}</td>
-                  <td>{symptom?.name}</td>
+                  <td>{damage?.damage_code}</td>
+                  <td>{damage?.name}</td>
                   <td>
                     <button
                       title="View"
                       onClick={() =>
-                        handleFetchSymptom(symptom?.symptom_code, true)
+                        handleFetchSymptom(damage?.damage_code, true)
                       }
                     >
                       <MdVisibility />
                     </button>
                     <button
                       title="Edit"
-                      onClick={() => handleFetchSymptom(symptom?.symptom_code)}
+                      onClick={() => handleFetchSymptom(damage?.damage_code)}
                     >
                       <MdEdit />
                     </button>
                     <button
                       title="Delete"
-                      onClick={() => handleDelete(symptom?.symptom_code)}
+                      onClick={() => handleDelete(damage?.damage_code)}
                     >
                       <MdDelete />
                     </button>
