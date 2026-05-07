@@ -21,6 +21,7 @@ export default function App() {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="users" element={<User />} />
+          <Route path="complaints" element={<Symptom />} />
           <Route path="symptoms" element={<Symptom />} />
           <Route path="damages" element={<Damage />} />
           <Route path="rules" element={<Rule />} />

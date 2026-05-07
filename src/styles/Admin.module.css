@@ -128,10 +128,6 @@
             padding: var(--px-8) 0;
             border-bottom: var(--px-4) solid var(--signal-orange);
           }
-
-          > th:first-child {
-            border: none;
-          }
         }
 
         > tbody {
@@ -192,8 +188,18 @@
       }
 
       .rulesTable {
-        > thead > tr > th {
-          cursor: pointer;
+        > thead > tr {
+          > th {
+            cursor: pointer;
+          }
+          > th:hover {
+            background-color: var(--steel-blue);
+            cursor: pointer;
+          }
+
+          > th:first-child {
+            border: none;
+          }
         }
 
         tbody {

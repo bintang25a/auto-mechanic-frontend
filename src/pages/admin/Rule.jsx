@@ -6,6 +6,7 @@ import { showSymptom } from "../../_services/symptoms";
 import { showDamage } from "../../_services/damages";
 import { adminPageRules } from "../../_services/page";
 import styles from "../../styles/Admin.module.css";
+import { MdAddBox } from "react-icons/md";
 
 export default function Rule() {
   const { setIsLoading, setInfoModal, refresh } = useOutletContext();
@@ -22,7 +23,6 @@ export default function Rule() {
       setIsLoading(true);
 
       const [rulesData] = await Promise.all([adminPageRules()]);
-      console.log(rulesData);
 
       setRules(rulesData?.rules);
 
@@ -94,6 +94,36 @@ export default function Rule() {
     },
   ];
 
+  const handleAddRule = () => {
+    setViewModal({
+      isView: false,
+      fields: [
+        {
+          name: "symptom_code",
+          label: "Select Symptoms",
+          type: "select",
+          options:
+            rowCol?.row?.map((symptom) => ({
+              name: symptom?.name,
+              value: symptom?.symptom_code,
+            })) || [],
+        },
+        {
+          name: "damage_code",
+          label: "Select Damages",
+          type: "select",
+          options:
+            rowCol?.col?.map((damage) => ({
+              name: damage?.name,
+              value: damage?.damage_code,
+            })) || [],
+        },
+      ],
+    });
+
+    setModalOpen(true);
+  };
+
   const handleFetchData = async (id, isDamage) => {
     setIsLoading(true);
 
@@ -104,6 +134,7 @@ export default function Rule() {
       const damagesData = response?.data?.damages;
 
       setViewModal({
+        isView: true,
         fields: isDamage ? damageFields : symptomFields,
         data: isDamage
           ? {
@@ -179,22 +210,24 @@ export default function Rule() {
       <header className={styles.header}>
         <h2>Rules Data</h2>
 
-        <form>
-          <div className={styles.search}>
-            <select disabled>
-              <option value="">Click Damage/Symptom Code to see detail</option>
-            </select>
+        <div className={styles.search}>
+          <select disabled>
+            <option value="">Click Damage/Symptom Code to see detail</option>
+          </select>
 
-            <input
-              type="text"
-              name="value"
-              id="value"
-              placeholder="Search data"
-              onChange={handleSearchChange}
-              value={search}
-            />
-          </div>
-        </form>
+          <input
+            type="text"
+            name="value"
+            id="value"
+            placeholder="Search data"
+            onChange={handleSearchChange}
+            value={search}
+          />
+
+          <button type="button" title="Add Data" onClick={handleAddRule}>
+            <MdAddBox />
+          </button>
+        </div>
       </header>
 
       <main className={styles.main}>
@@ -263,7 +296,7 @@ export default function Rule() {
           data={viewModal?.data}
           onClose={handleModalClose}
           onSubmit={() => {}}
-          isView={true}
+          isView={viewModal?.isView}
         />
       )}
     </div>

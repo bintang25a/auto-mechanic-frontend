@@ -34,7 +34,7 @@ export default function FormModal({ fields, data, onSubmit, onClose, isView }) {
   return (
     <div className={styles.overlay}>
       <div className={`${styles.modal} ${styles?.formModal}`}>
-        <h2>Add Data</h2>
+        <h2>{isView ? "View Data" : data ? "Edit Data" : "Add Data"}</h2>
 
         <form onSubmit={(e) => onSubmit(e, formData)}>
           <div className={styles.formContainer}>
