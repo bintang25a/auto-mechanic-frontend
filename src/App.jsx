@@ -8,6 +8,8 @@ import User from "./pages/admin/User";
 import Symptom from "./pages/admin/Symptom";
 import Damage from "./pages/admin/Damage";
 import Rule from "./pages/admin/Rule";
+import ServiceLayout from "./layouts/ServiceLayout";
+import Service from "./pages/service";
 
 export default function App() {
   return (
@@ -17,7 +19,12 @@ export default function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
 
+        <Route path="service" element={<ServiceLayout />}>
+          <Route index element={<Service />}></Route>
+        </Route>
+
         <Route path="staff" element={<main>Admin</main>} />
+
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="users" element={<User />} />

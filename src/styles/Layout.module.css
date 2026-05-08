@@ -1,3 +1,10 @@
+.layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .header {
   width: 100%;
   position: fixed;
@@ -189,6 +196,18 @@
   }
 }
 
+.main {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  padding-top: var(--px-192);
+  padding-bottom: var(--px-64);
+}
+
 .footer {
   width: 100%;
   height: fit-content;
@@ -208,18 +227,10 @@
 }
 
 @media screen and (min-width: 768px) {
-  .layout {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
   .header {
     align-items: center;
     position: sticky;
     top: 0;
-    background-color: var(--midnight-blue);
 
     .navbar {
       flex: 1;
@@ -339,13 +350,22 @@
       display: none;
     }
   }
+  .header.scrolled {
+    top: var(--px-24);
+    width: 85%;
+    border-radius: 1000px;
+    padding-left: var(--px-32);
+    padding-left: var(--px-32);
+  }
 
   .main {
     flex: 1;
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: row;
     overflow: hidden;
+    padding: 0 !important;
   }
 
   .aside {

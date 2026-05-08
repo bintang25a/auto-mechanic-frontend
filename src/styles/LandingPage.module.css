@@ -1,3 +1,17 @@
+.layout {
+  width: 100%;
+  height: fit-content;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  padding: 0 var(--px-32);
+}
+
 .main {
   flex: 1;
   min-height: fit-content;

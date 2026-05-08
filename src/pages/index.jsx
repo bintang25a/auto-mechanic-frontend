@@ -22,7 +22,7 @@ export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <>
+    <div className={styles.layout}>
       <Header setIsLoading={setIsLoading} />
       <main className={styles.main}>
         <section className="hero">
@@ -102,6 +102,6 @@ export default function LandingPage() {
       <Footer />
       <InteractiveBackground />
       {isLoading && <LoadingJump />}
-    </>
+    </div>
   );
 }

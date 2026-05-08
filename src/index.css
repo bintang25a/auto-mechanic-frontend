@@ -58,7 +58,7 @@
 
 ::-webkit-scrollbar {
   min-width: 8px;
-  width: var(--px-8);
+  width: var(--px-4);
   height: var(--px-4);
 }
 ::-webkit-scrollbar-track {
@@ -182,11 +182,4 @@ h6 {
   justify-content: center;
 
   position: relative;
-  padding: 0 var(--px-32);
-}
-
-@media screen and (min-width: 768px) {
-  #root {
-    padding: 0;
-  }
 }
