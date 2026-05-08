@@ -28,7 +28,7 @@ export default function AdminLayout() {
 
   return (
     <>
-      <div className={styles?.layout}>
+      <div className={styles?.adminLayout}>
         <Header setIsLoading={setIsLoading} setRefresh={setRefresh} />
         <main className={styles.main}>
           <Sidebar />

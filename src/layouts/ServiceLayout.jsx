@@ -26,7 +26,7 @@ export default function ServiceLayout() {
 
   return (
     <>
-      <div className={styles.layout}>
+      <div className={styles.serviceLayout}>
         <Header setIsLoading={setIsLoading} setRefresh={() => {}} />
         <Outlet context={{ setIsLoading, setConfirmModal, setInfoModal }} />
         <Footer />

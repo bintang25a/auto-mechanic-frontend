@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--px-128) var(--px-8);
+  padding: var(--px-128) var(--px-32);
 
   .authContainer {
     width: 100%;

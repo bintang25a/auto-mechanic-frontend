@@ -1,8 +1,11 @@
-.layout {
+.adminLayout,
+.serviceLayout {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: fit-content;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .header {
@@ -227,6 +230,16 @@
 }
 
 @media screen and (min-width: 768px) {
+  .adminLayout {
+    height: 100vh !important;
+  }
+
+  .serviceLayout {
+    height: fit-content;
+    overflow: visible;
+    align-items: center;
+  }
+
   .header {
     align-items: center;
     position: sticky;
@@ -355,7 +368,7 @@
     width: 85%;
     border-radius: 1000px;
     padding-left: var(--px-32);
-    padding-left: var(--px-32);
+    padding-right: var(--px-32);
   }
 
   .main {

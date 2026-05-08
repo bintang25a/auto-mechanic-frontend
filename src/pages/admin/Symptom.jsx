@@ -35,7 +35,7 @@ export default function Symptom() {
       setIsLoading(true);
 
       const [symptomsData] = await Promise.all([
-        getSymptoms(`page=${currentPage}`),
+        getSymptoms(`page=${currentPage}&per_page=20`),
       ]);
 
       setSymptoms(symptomsData?.data);
@@ -63,7 +63,9 @@ export default function Symptom() {
     setIsLoading(true);
 
     const isEmpty = !search?.value || !search?.column;
-    const query = isEmpty ? "" : `${search?.column}=${search?.value}`;
+    const query = isEmpty
+      ? "&per_page=20"
+      : `${search?.column}=${search?.value}&per_page=20`;
 
     const [symptomsData] = await Promise.all([getSymptoms(query)]);
 
@@ -85,7 +87,7 @@ export default function Symptom() {
         : "";
 
     const [symptomsData] = await Promise.all([
-      getSymptoms(`page=${page}&${query}`),
+      getSymptoms(`page=${page}&${query}&per_page=20`),
     ]);
 
     setCurrentPage(page);
