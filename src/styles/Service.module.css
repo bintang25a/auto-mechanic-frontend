@@ -45,7 +45,7 @@
 
     position: relative;
 
-    > a {
+    > a:nth-of-type(2) {
       position: absolute;
       right: var(--px-48);
       top: 50%;
@@ -57,10 +57,10 @@
       border-radius: var(--px-16);
       color: var(--white);
     }
-    a:hover {
+    a:nth-of-type(2):hover {
       transform: translateY(-50%) scale(1.05);
     }
-    a:active {
+    a:nth-of-type(2):active {
       transform: translateY(-50%) scale(0.9);
     }
 
@@ -85,6 +85,26 @@
       font-size: var(--fs-8);
       font-weight: 600;
       color: var(--midnight-blue);
+    }
+
+    > a:nth-of-type(1) {
+      margin-top: var(--px-16);
+      width: 100%;
+      background-color: var(--btn-info);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      font-size: var(--fs-7);
+      font-weight: 500;
+      color: var(--midnight-blue);
+
+      padding: var(--px-8) var(--px-24);
+      border-radius: var(--px-12);
+      box-shadow: 3px 1px 4px var(--gray-700);
+    }
+    > a:nth-of-type(1):hover {
+      transform: scale(1.05);
     }
   }
 
@@ -285,6 +305,7 @@
         overflow: auto;
         display: flex;
         flex-wrap: wrap;
+        align-content: flex-start;
         gap: var(--px-8);
 
         padding: var(--px-24);
@@ -295,6 +316,7 @@
 
         > button {
           flex: 1;
+          max-height: fit-content;
           font-size: var(--fs-5);
           font-weight: 400;
           text-wrap: nowrap;
@@ -307,13 +329,13 @@
 
           cursor: pointer;
         }
-        > button.selected {
-          background-color: var(--signal-orange);
-          border-color: var(--signal-orange);
-        }
         > button:hover {
           background-color: var(--btn-info);
           transform: scale(1.025);
+        }
+        > button.selected {
+          background-color: var(--signal-orange);
+          border-color: var(--signal-orange);
         }
         > button:active {
           transform: scale(0.9);

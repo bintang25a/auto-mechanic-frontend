@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/Service.module.css";
 import { getSymptoms } from "../../_services/symptoms";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { FaPaperPlane } from "react-icons/fa6";
 import { createComplaint } from "../../_services/complaints";
 
 export default function Add() {
   const { setIsLoading, setInfoModal } = useOutletContext();
+  const navigate = useNavigate();
 
   const [symptoms, setSymptoms] = useState([]);
 
@@ -47,13 +48,18 @@ export default function Add() {
     }
   };
 
+  const onClose = () => {
+    setInfoModal({ isOpen: false });
+
+    navigate(`/service/status`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     const localUser = localStorage.getItem("user");
     const user = localUser ? JSON.parse(localUser) : {};
-    console.log(user);
 
     const data = {
       ...formData,
@@ -67,8 +73,10 @@ export default function Add() {
 
       setInfoModal({
         isOpen: true,
-        title: "Get data failed",
-        message: response?.message,
+        title: response?.message,
+        onClose,
+        message:
+          "Apply service successfully, Please check your service status to go to next step",
       });
     } catch (error) {
       setInfoModal({
@@ -80,6 +88,15 @@ export default function Add() {
     } finally {
       setTimeout(() => setIsLoading(false), 250);
     }
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredSymptoms = symptoms.filter((symptom) =>
+    symptom?.name?.toLowerCase().includes(searchQuery?.toLowerCase())
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -126,9 +143,14 @@ export default function Add() {
           </div>
           <div className={styles.inputContainer}>
             <label>Select Symptoms</label>
+            <input
+              type="text"
+              placeholder="Search Symptom"
+              onChange={handleSearchChange}
+            />
 
             <div className={styles.container}>
-              {symptoms?.map((s) => (
+              {filteredSymptoms?.map((s) => (
                 <button
                   type="button"
                   key={s?.symptom_code}

@@ -11,6 +11,7 @@ import Rule from "./pages/admin/Rule";
 import ServiceLayout from "./layouts/ServiceLayout";
 import Service from "./pages/service";
 import Add from "./pages/service/Add";
+import Status from "./pages/service/Status";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="service" element={<ServiceLayout />}>
           <Route index element={<Service />}></Route>
           <Route path="add" element={<Add />}></Route>
+          <Route path="status" element={<Status />}></Route>
         </Route>
 
         <Route path="staff" element={<main>Admin</main>} />

@@ -20,6 +20,7 @@ export default function ServiceLayout() {
   const [infoModal, setInfoModal] = useState({
     isOpen: false,
     isError: false,
+    onClose: null,
     title: "",
     message: "",
   });
@@ -44,7 +45,11 @@ export default function ServiceLayout() {
       <InfoModal
         isOpen={infoModal?.isOpen}
         isError={infoModal?.isError}
-        onClose={() => setInfoModal({ isOpen: false })}
+        onClose={
+          infoModal?.onClose
+            ? infoModal?.onClose
+            : () => setInfoModal({ isOpen: false })
+        }
         title={infoModal?.title}
         message={infoModal?.message}
       />

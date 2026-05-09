@@ -10,57 +10,42 @@ import {
   MdSync,
 } from "react-icons/md";
 import styles from "../../styles/Service.module.css";
-import { Link } from "react-router-dom";
-import { FaCalendarDays, FaCar, FaMotorcycle } from "react-icons/fa6";
+import { Link, useOutletContext } from "react-router-dom";
+import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { getComplaints } from "../../_services/complaints";
 
 export default function Service() {
-  const complaints = [
-    {
-      complaint_number: "CMP00003",
-      created_at: "2026-05-07T15:17:34.000000Z",
-      vehicle: "Honda Beat",
-      license_number: "B 1652 EUD",
-      queue: {
-        status: "waiting",
-      },
-    },
-    {
-      complaint_number: "CMP00012",
-      created_at: "2026-05-07T15:17:34.000000Z",
-      vehicle: "Honda Vario",
-      license_number: "B 1652 EUD",
-      queue: {
-        status: "done",
-      },
-    },
-    {
-      complaint_number: "CMP00001",
-      created_at: "2026-05-07T15:17:34.000000Z",
-      vehicle: "Yamaha Mio",
-      license_number: "B 1652 EUD",
-      queue: {
-        status: "process",
-      },
-    },
-    {
-      complaint_number: "CMP00012",
-      created_at: "2026-05-07T15:17:34.000000Z",
-      vehicle: "Honda Vario",
-      license_number: "B 1652 EUD",
-      queue: {
-        status: "done",
-      },
-    },
-    {
-      complaint_number: "CMP00001",
-      created_at: "2026-05-07T15:17:34.000000Z",
-      vehicle: "Yamaha Mio",
-      license_number: "B 1652 EUD",
-      queue: {
-        status: "cancel",
-      },
-    },
-  ];
+  const { setIsLoading } = useOutletContext();
+
+  const [complaints, setComplaints] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const fetchData = async () => {
+      const localUser = localStorage.getItem("user");
+      const user = localUser ? JSON.parse(localUser) : {};
+
+      const [complaintsData] = await Promise.all([
+        getComplaints(`customer_id=${user?.uid}`),
+      ]);
+
+      const sortedData = [...(complaintsData?.data || [])].sort((a, b) => {
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+
+      localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
+
+      setComplaints(sortedData);
+
+      setTimeout(() => setIsLoading(false), 1000);
+    };
+
+    fetchData();
+
+    // eslint-disable-next-line
+  }, []);
 
   const formatedDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -96,6 +81,19 @@ export default function Service() {
         <span>Member at: 24 Desember 2026</span>
         <span>Total Service: 80</span>
 
+        {complaints[0]?.queue?.status !== "done" && (
+          <Link to={"status"}>
+            {complaints[0]?.complaint_number}: {complaints[0]?.queue?.status}
+            {complaints[0]?.queue?.status === "waiting" ? (
+              <MdHourglassEmpty size={25} />
+            ) : complaints[0]?.queue?.status === "process" ? (
+              <MdSync size={25} />
+            ) : complaints[0]?.queue?.status === "cancel" ? (
+              <MdCancel size={25} />
+            ) : null}
+          </Link>
+        )}
+
         <Link to={"/profile"}>
           <MdPerson size={40} />
         </Link>
@@ -120,8 +118,23 @@ export default function Service() {
         <h2>Recent History</h2>
 
         <div className={styles.container}>
-          {complaints?.slice(0, 5)?.map((complaint) => (
+          {complaints?.length == 0 && (
             <div className={styles.card}>
+              <div className={`${styles.icon} ${styles.cancelColor}`}>
+                <MdCancel size={40} />
+              </div>
+              <div className={styles.info}>
+                <h3>No Recent History</h3>
+                <span className={styles.cancelColor}>Status: Nothing</span>
+                <span>
+                  <FaCalendarDays /> {formatedDate(new Date())}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {complaints?.slice(0, 5)?.map((complaint) => (
+            <div key={complaint?.complaint_number} className={styles.card}>
               <div
                 className={`${styles.icon} ${colorClass(
                   complaint?.queue?.status

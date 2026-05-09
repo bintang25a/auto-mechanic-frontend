@@ -43,7 +43,7 @@ export default function Header({ setIsLoading, setRefresh }) {
         setIsLogin(true);
       }
 
-      setTimeout(() => setIsLoading(false), 500);
+      setTimeout(() => setIsLoading(false), 1000);
     };
 
     fetchUser();
