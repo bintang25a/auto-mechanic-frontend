@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/Service.module.css";
 import { getSymptoms } from "../../_services/symptoms";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { FaPaperPlane } from "react-icons/fa6";
 import { createComplaint } from "../../_services/complaints";
+import {
+  MdAnalytics,
+  MdAssignmentAdd,
+  MdDashboard,
+  MdFactCheck,
+  MdRestore,
+} from "react-icons/md";
 
 export default function Add() {
   const { setIsLoading, setInfoModal } = useOutletContext();
@@ -175,6 +182,28 @@ export default function Add() {
           </button>
         </section>
       </form>
+
+      <section className={styles.action}>
+        <Link to={"/service"} className={styles.linkApplication}>
+          <MdDashboard size={30} /> App
+        </Link>
+        <Link
+          to={"/service/add"}
+          className={styles.linkService}
+          style={{ backgroundColor: `var(--signal-orange)` }}
+        >
+          <MdAssignmentAdd size={30} /> Service
+        </Link>
+        <Link to={"/service/status"} className={styles.linkStatus}>
+          <MdFactCheck size={30} /> Status
+        </Link>
+        <Link to={"/service/diagnosis"} className={styles.linkDiagnosis}>
+          <MdAnalytics size={30} /> Diagnosis
+        </Link>
+        <Link to={"/service/history"} className={styles.linkHistory}>
+          <MdRestore size={30} /> History
+        </Link>
+      </section>
     </main>
   );
 }

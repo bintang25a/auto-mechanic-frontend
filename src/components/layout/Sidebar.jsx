@@ -52,9 +52,6 @@ export default function Sidebar() {
           <li>
             <Link to={"/admin/rules"}>Rule</Link>
           </li>
-          <li>
-            <Link to={"/admin/results"}>Result</Link>
-          </li>
         </ul>
       </div>
       <div className={styles.navContainer}>
@@ -67,13 +64,16 @@ export default function Sidebar() {
             <Link to={"/"}>Home</Link>
           </li>
           <li>
-            <Link to={"/service/application"}>Service Application</Link>
+            <Link to={"/service"}>Service Application</Link>
           </li>
           <li>
             <Link to={"/service/status"}>Service Status</Link>
           </li>
           <li>
             <Link to={"/service/history"}>Service History</Link>
+          </li>
+          <li>
+            <Link to={"/service/diagnosis"}>Diagnosis</Link>
           </li>
         </ul>
       </div>

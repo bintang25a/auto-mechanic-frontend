@@ -12,6 +12,8 @@ import ServiceLayout from "./layouts/ServiceLayout";
 import Service from "./pages/service";
 import Add from "./pages/service/Add";
 import Status from "./pages/service/Status";
+import History from "./pages/service/History";
+import Diagnosis from "./pages/service/Diagnosis";
 
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
           <Route path="add" element={<Add />}></Route>
           <Route path="status/:id" element={<Status />}></Route>
           <Route path="status" element={<Status />}></Route>
+          <Route path="diagnosis" element={<Diagnosis />}></Route>
+          <Route path="history" element={<History />}></Route>
         </Route>
 
         <Route path="staff" element={<main>Admin</main>} />

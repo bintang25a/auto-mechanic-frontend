@@ -121,7 +121,7 @@
       justify-content: center;
       align-items: center;
 
-      padding: var(--px-32);
+      padding: var(--px-16);
       font-size: var(--fs-6);
       font-weight: 600;
       color: var(--midnight-blue);
@@ -130,19 +130,25 @@
       border: 2px solid var(--btn-save);
       background-color: var(--white);
     }
-    a:nth-of-type(2) {
+    > a.linkApplication {
+      border-color: var(--steel-blue);
+    }
+    a.linkService {
       border-color: var(--signal-orange);
     }
-    a:nth-of-type(3) {
+    a.linkStatus {
+      border-color: var(--btn-save);
+    }
+    a.linkDiagnosis {
       border-color: var(--btn-info);
     }
-    a:nth-of-type(4) {
+    a.linkHistory {
       border-color: var(--btn-danger);
     }
     > a:hover {
       transform: scale(1.025);
-      background-color: var(--signal-orange);
-      border-color: var(--signal-orange);
+      background-color: var(--steel-blue);
+      border-color: var(--steel-blue);
     }
     > a:active {
       transform: scale(0.9);
@@ -365,6 +371,97 @@
       transform: scale(0.95);
     }
   }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+
+    h2 {
+      width: 100%;
+      font-size: var(--fs-8);
+      font-weight: 800;
+      color: var(--midnight-blue);
+    }
+
+    .divider {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      justify-content: start;
+      border-top: 1px solid var(--midnight-blue);
+      border-bottom: 1px solid var(--midnight-blue);
+      padding: var(--px-8);
+      margin: var(--px-16) 0;
+
+      > span {
+        font-size: var(--fs-7);
+        font-weight: 400;
+        color: var(--midnight-blue);
+        overflow: hidden;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .progressContainer {
+        width: 100%;
+        margin-top: var(--px-8);
+        border-radius: var(--px-16);
+        border: 1px solid var(--midnight-blue);
+        padding: var(--px-4) var(--px-16);
+        background-color: transparent;
+
+        box-shadow: 1px 0px 3px var(--gray-700);
+        position: relative;
+        overflow: hidden;
+
+        > span {
+          position: relative;
+          font-size: var(--fs-6);
+          font-weight: 500;
+          z-index: 2;
+          color: var(--steel-blue);
+          /* mix-blend-mode: difference; */
+        }
+
+        .progressBar {
+          position: absolute;
+          background-color: var(--steel-blue);
+          z-index: 1;
+          top: 0;
+          left: 0;
+          height: 100%;
+          border-radius: var(--px-16);
+        }
+      }
+      .progressContainer:hover {
+        transform: scale(1.025);
+      }
+    }
+    .divider:first-of-type {
+      > span {
+        font-weight: 500;
+        color: var(--gray-900);
+      }
+    }
+    .divider:last-of-type {
+      flex: 1;
+    }
+    .divider:nth-of-type(2):not(:last-of-type) {
+      width: 100%;
+    }
+
+    .description {
+      border-top: 1px solid var(--midnight-blue);
+      border-bottom: 1px solid var(--midnight-blue);
+      padding: var(--px-8);
+      margin: var(--px-16) 0;
+
+      font-size: var(--fs-7);
+      font-weight: 400;
+      color: var(--midnight-blue);
+      text-align: justify;
+    }
+  }
 }
 
 @media screen and (min-width: 768px) {
@@ -378,6 +475,7 @@
 
     gap: var(--px-32);
 
-    padding: 0 var(--px-32);
+    padding: 0 var(--px-128);
+    padding-bottom: var(--px-32);
   }
 }

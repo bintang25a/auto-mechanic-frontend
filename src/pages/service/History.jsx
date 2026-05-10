@@ -1,21 +1,21 @@
+import { useEffect, useState } from "react";
 import {
   MdAnalytics,
   MdAssignmentAdd,
   MdCancel,
   MdCheckCircle,
+  MdDashboard,
   MdFactCheck,
   MdHourglassEmpty,
-  MdPerson,
   MdRestore,
   MdSync,
 } from "react-icons/md";
 import styles from "../../styles/Service.module.css";
-import { Link, useOutletContext } from "react-router-dom";
-import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useOutletContext, Link } from "react-router-dom";
 import { getComplaints } from "../../_services/complaints";
+import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 
-export default function Service() {
+export default function History() {
   const { setIsLoading } = useOutletContext();
 
   const [complaints, setComplaints] = useState([]);
@@ -74,48 +74,10 @@ export default function Service() {
 
   return (
     <main className={styles.main}>
-      <h1>Service Dashboard</h1>
-      <section className={styles.information}>
-        <h2>Bintang Al Fizar</h2>
-        <span>bintang25a || bintangalfizar25@gmail.com</span>
-        <span>Member at: 24 Desember 2026</span>
-        <span>Total Service: 80</span>
-
-        {complaints[0]?.queue?.status !== "done" && complaints[0] && (
-          <Link className={styles.status} to={"status"}>
-            {complaints[0]?.complaint_number}: {complaints[0]?.queue?.status}
-            {complaints[0]?.queue?.status === "waiting" ? (
-              <MdHourglassEmpty size={25} />
-            ) : complaints[0]?.queue?.status === "process" ? (
-              <MdSync size={25} />
-            ) : complaints[0]?.queue?.status === "cancel" ? (
-              <MdCancel size={25} />
-            ) : null}
-          </Link>
-        )}
-
-        <Link className={styles.profile} to={"/profile"}>
-          <MdPerson size={40} />
-        </Link>
-      </section>
-
-      <section className={styles.action}>
-        <Link to={"add"} className={styles.linkService}>
-          <MdAssignmentAdd size={30} /> Service
-        </Link>
-        <Link to={"status"} className={styles.linkStatus}>
-          <MdFactCheck size={30} /> Status
-        </Link>
-        <Link to={"diagnosis"} className={styles.linkDiagnosis}>
-          <MdAnalytics size={30} /> Diagnosis
-        </Link>
-        <Link to={"history"} className={styles.linkHistory}>
-          <MdRestore size={30} /> History
-        </Link>
-      </section>
+      <h1>Service History</h1>
 
       <section className={styles.history}>
-        <h2>Recent History</h2>
+        <h2>{complaints?.length} Histories </h2>
 
         <div className={styles.container}>
           {complaints?.length == 0 && (
@@ -133,7 +95,7 @@ export default function Service() {
             </div>
           )}
 
-          {complaints?.slice(0, 5)?.map((complaint) => (
+          {complaints?.map((complaint) => (
             <Link
               to={`status/${complaint?.complaint_number}`}
               key={complaint?.complaint_number}
@@ -169,6 +131,28 @@ export default function Service() {
             </Link>
           ))}
         </div>
+      </section>
+
+      <section className={styles.action}>
+        <Link to={"/service"} className={styles.linkApplication}>
+          <MdDashboard size={30} /> App
+        </Link>
+        <Link to={"/service/add"} className={styles.linkService}>
+          <MdAssignmentAdd size={30} /> Service
+        </Link>
+        <Link to={"/service/status"} className={styles.linkStatus}>
+          <MdFactCheck size={30} /> Status
+        </Link>
+        <Link to={"/service/diagnosis"} className={styles.linkDiagnosis}>
+          <MdAnalytics size={30} /> Diagnosis
+        </Link>
+        <Link
+          to={"/service/history"}
+          className={styles.linkHistory}
+          style={{ backgroundColor: `var(--btn-danger)` }}
+        >
+          <MdRestore size={30} /> History
+        </Link>
       </section>
     </main>
   );
