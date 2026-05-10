@@ -24,6 +24,7 @@ export default function App() {
         <Route path="service" element={<ServiceLayout />}>
           <Route index element={<Service />}></Route>
           <Route path="add" element={<Add />}></Route>
+          <Route path="status/:id" element={<Status />}></Route>
           <Route path="status" element={<Status />}></Route>
         </Route>
 

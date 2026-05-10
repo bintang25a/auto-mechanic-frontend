@@ -81,8 +81,8 @@ export default function Service() {
         <span>Member at: 24 Desember 2026</span>
         <span>Total Service: 80</span>
 
-        {complaints[0]?.queue?.status !== "done" && (
-          <Link to={"status"}>
+        {complaints[0]?.queue?.status !== "done" && complaints[0] && (
+          <Link className={styles.status} to={"status"}>
             {complaints[0]?.complaint_number}: {complaints[0]?.queue?.status}
             {complaints[0]?.queue?.status === "waiting" ? (
               <MdHourglassEmpty size={25} />
@@ -94,7 +94,7 @@ export default function Service() {
           </Link>
         )}
 
-        <Link to={"/profile"}>
+        <Link className={styles.profile} to={"/profile"}>
           <MdPerson size={40} />
         </Link>
       </section>
@@ -134,7 +134,11 @@ export default function Service() {
           )}
 
           {complaints?.slice(0, 5)?.map((complaint) => (
-            <div key={complaint?.complaint_number} className={styles.card}>
+            <Link
+              to={`status/${complaint?.complaint_number}`}
+              key={complaint?.complaint_number}
+              className={styles.card}
+            >
               <div
                 className={`${styles.icon} ${colorClass(
                   complaint?.queue?.status
@@ -162,7 +166,7 @@ export default function Service() {
                   <FaCalendarDays /> {formatedDate(complaint?.created_at)}
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

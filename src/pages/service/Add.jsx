@@ -51,7 +51,7 @@ export default function Add() {
   const onClose = () => {
     setInfoModal({ isOpen: false });
 
-    navigate(`/service/status`);
+    navigate(`/service/status/`);
   };
 
   const handleSubmit = async (e) => {
@@ -69,7 +69,10 @@ export default function Add() {
 
     try {
       const response = await createComplaint(data);
-      console.log(response);
+      localStorage.setItem(
+        "complaint_number",
+        response?.data?.complaint_number
+      );
 
       setInfoModal({
         isOpen: true,
