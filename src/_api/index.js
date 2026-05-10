@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  // baseURL: "https://hqhhcnz8-8000.asse.devtunnels.ms/api",
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: "https://c494-2a09-bac1-6500-8-00-3c3-42.ngrok-free.app/api",
+  // baseURL: "http://127.0.0.1:8000/api",
 });
 
 API.interceptors.request.use(
@@ -11,6 +11,8 @@ API.interceptors.request.use(
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
+
+    config.headers["ngrok-skip-browser-warning"] = "true";
 
     return config;
   },

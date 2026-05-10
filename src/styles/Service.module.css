@@ -75,9 +75,14 @@
 
     > span:first-of-type,
     > span:nth-of-type(2) {
+      width: 80%;
       font-size: var(--fs-6);
       font-weight: 400;
       color: var(--steel-blue);
+
+      text-wrap: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     > span:last-of-type {
@@ -122,7 +127,7 @@
       align-items: center;
 
       padding: var(--px-16);
-      font-size: var(--fs-6);
+      font-size: var(--fs-4);
       font-weight: 600;
       color: var(--midnight-blue);
 
@@ -208,7 +213,7 @@
           aspect-ratio: 1/1;
           height: 100%;
           width: auto;
-          padding: var(--px-32);
+          padding: var(--px-24);
           font-size: var(--fs-10);
           color: var(--platinum-gray);
 
@@ -229,10 +234,14 @@
 
           > h3 {
             flex: 1;
-            font-size: var(--fs-8);
+            font-size: var(--fs-6);
             font-weight: 700;
             color: var(--gray-200);
             margin-bottom: var(--px-8);
+
+            text-overflow: ellipsis;
+            text-wrap: nowrap;
+            overflow: hidden;
           }
 
           > span {
@@ -241,11 +250,15 @@
             justify-content: flex-start;
             align-items: center;
             gap: var(--px-8);
+
+            text-overflow: ellipsis;
+            text-wrap: nowrap;
+            overflow: hidden;
           }
 
           > span:nth-of-type(1) {
             width: 35%;
-            font-size: var(--fs-6);
+            font-size: var(--fs-4);
             font-weight: 400;
             color: var(--midnight-blue);
             justify-content: end;
@@ -253,7 +266,7 @@
 
           > span:nth-of-type(2),
           > :nth-of-type(3) {
-            font-size: var(--fs-6);
+            font-size: var(--fs-5);
             font-weight: 400;
             color: var(--gray-300);
           }

@@ -155,7 +155,7 @@ export default function Service() {
                 )}
               </div>
               <div className={styles.info}>
-                <h3>Number: {complaint?.complaint_number}</h3>
+                <h3>ID: {complaint?.complaint_number}</h3>
                 <span className={colorClass(complaint?.queue?.status)}>
                   Status: {complaint?.queue?.status}
                 </span>
