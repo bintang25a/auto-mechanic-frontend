@@ -54,7 +54,7 @@ const DiagnosisItem = ({ d }) => {
   );
 };
 
-export default function Status() {
+export default function Show() {
   const { setIsLoading } = useOutletContext();
   const { id } = useParams();
   const navigate = useNavigate();
