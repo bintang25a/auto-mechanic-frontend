@@ -245,6 +245,16 @@
     position: sticky;
     top: 0;
 
+    .logo {
+      > img {
+        width: var(--px-32);
+      }
+
+      > h1 {
+        font-size: var(--fs-4);
+      }
+    }
+
     .navbar {
       flex: 1;
       flex-direction: row;
@@ -319,7 +329,7 @@
       position: relative;
 
       .photo {
-        width: var(--px-64);
+        width: var(--px-48);
         font-size: var(--fs-3);
       }
 

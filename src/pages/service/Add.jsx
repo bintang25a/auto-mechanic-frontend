@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/Service.module.css";
-import { getSymptoms } from "../../_services/symptoms";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { FaPaperPlane } from "react-icons/fa6";
 import { createComplaint } from "../../_services/complaints";
@@ -13,22 +12,21 @@ import {
 } from "react-icons/md";
 
 export default function Add() {
-  const { setIsLoading, setInfoModal } = useOutletContext();
+  const { setIsLoading, setInfoModal, firstLoad, data } = useOutletContext();
+  const { symptomsData: symptoms } = data;
   const navigate = useNavigate();
 
-  const [symptoms, setSymptoms] = useState([]);
-
   useEffect(() => {
-    setIsLoading(true);
+    const { setIsFirstLoad, isFirstLoad } = firstLoad;
 
-    const fetchData = async () => {
-      const [symptomsData] = await Promise.all([getSymptoms("")]);
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
 
-      setSymptoms(symptomsData?.data);
+    setTimeout(() => {
+      setIsFirstLoad(false);
       setIsLoading(false);
-    };
-
-    fetchData();
+    }, 250);
 
     // eslint-disable-next-line
   }, []);
@@ -190,7 +188,10 @@ export default function Add() {
         <Link
           to={"/service/add"}
           className={styles.linkService}
-          style={{ backgroundColor: `var(--signal-orange)` }}
+          style={{
+            backgroundColor: `var(--signal-orange)`,
+            color: `var(--platinum-gray)`,
+          }}
         >
           <MdAssignmentAdd size={30} /> Service
         </Link>

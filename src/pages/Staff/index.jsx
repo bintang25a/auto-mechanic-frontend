@@ -1,30 +1,32 @@
 import { useEffect, useState } from "react";
 import {
-  MdAnalytics,
-  MdAssignmentAdd,
   MdCancel,
   MdCheckCircle,
-  MdDashboard,
-  MdFactCheck,
   MdHourglassEmpty,
-  MdRestore,
   MdSync,
 } from "react-icons/md";
-import styles from "../../styles/Service.module.css";
+import styles from "../../styles/Staff.module.css";
 import { useOutletContext, Link } from "react-router-dom";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 import { getQueues } from "../../_services/queues";
+import { showUser } from "../../_services/users";
 
 export default function DashboardStaff() {
   const { setIsLoading } = useOutletContext();
 
   const [queues, setQueues] = useState([]);
+  const [status, setStatus] = useState("waiting");
 
   useEffect(() => {
     setIsLoading(true);
 
     const fetchData = async () => {
-      const [queueData] = await Promise.all([getQueues("status=waiting")]);
+      const [queueData, userData] = await Promise.all([
+        getQueues(`status=${status}`),
+        showUser("bintang25a"),
+      ]);
+
+      console.log(userData);
 
       setQueues(queueData?.data);
 
@@ -34,7 +36,7 @@ export default function DashboardStaff() {
     fetchData();
 
     // eslint-disable-next-line
-  }, []);
+  }, [status]);
 
   const formatedDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -61,12 +63,66 @@ export default function DashboardStaff() {
     }
   };
 
+  const colorStyles = () => {
+    return {
+      backgroundColor:
+        status === "waiting"
+          ? `var(--btn-warning)`
+          : status === "process"
+          ? `var(--btn-info)`
+          : status === "done"
+          ? `var(--btn-save)`
+          : `var(--btn-danger)`,
+      color: `var(--platinum-gray)`,
+      borderColor: `unset`,
+    };
+  };
+
   return (
     <main className={styles.main}>
       <h1>Staff Dashboard</h1>
 
-      <section className={styles.history}>
-        <h2>{queues?.length} Queues </h2>
+      <section className={styles.action}>
+        <button
+          className={styles.waitingColor}
+          style={status === "waiting" ? colorStyles() : {}}
+          onClick={() => setStatus("waiting")}
+        >
+          <MdHourglassEmpty size={30} /> Waiting
+        </button>
+
+        <button
+          className={styles.processColor}
+          style={status === "process" ? colorStyles() : {}}
+          onClick={() => setStatus("process")}
+        >
+          <MdSync size={30} /> Process
+        </button>
+        <button
+          className={styles.doneColor}
+          style={status === "done" ? colorStyles() : {}}
+          onClick={() => setStatus("done")}
+        >
+          <MdCheckCircle size={30} /> Done
+        </button>
+        <button
+          className={styles.cancelColor}
+          style={status === "cancel" ? colorStyles() : {}}
+          onClick={() => setStatus("cancel")}
+        >
+          <MdCancel size={30} /> Cancel
+        </button>
+      </section>
+
+      <section className={styles.queue}>
+        <h2>
+          {queues?.length}
+          {status === "waiting"
+            ? " Queues"
+            : status === "process"
+            ? " On Working"
+            : " HIstory"}
+        </h2>
 
         <div className={styles.container}>
           {queues?.length == 0 && (
@@ -75,7 +131,7 @@ export default function DashboardStaff() {
                 <MdCancel size={40} />
               </div>
               <div className={styles.info}>
-                <h3>No Recent History</h3>
+                <h3>No Queue History</h3>
                 <span className={styles.cancelColor}>Status: Nothing</span>
                 <span>
                   <FaCalendarDays /> {formatedDate(new Date())}

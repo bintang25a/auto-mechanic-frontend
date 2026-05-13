@@ -35,7 +35,7 @@ export default function Damage() {
       setIsLoading(true);
 
       const [damagesData] = await Promise.all([
-        getDamages(`page=${currentPage}`),
+        getDamages(`page=${currentPage}&per_page=20`),
       ]);
 
       setDamages(damagesData?.data);
@@ -85,7 +85,7 @@ export default function Damage() {
         : "";
 
     const [damagesData] = await Promise.all([
-      getDamages(`page=${page}&${query}`),
+      getDamages(`page=${page}&${query}&per_page=20`),
     ]);
 
     setCurrentPage(page);

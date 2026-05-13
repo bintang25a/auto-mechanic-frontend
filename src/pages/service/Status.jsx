@@ -1,12 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import styles from "../../styles/Service.module.css";
-import { showComplaint } from "../../_services/complaints";
-import {
-  Link,
-  useNavigate,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import {
   MdAnalytics,
   MdAssignmentAdd,
@@ -14,76 +8,24 @@ import {
   MdFactCheck,
   MdRestore,
 } from "react-icons/md";
-
-const DiagnosisItem = ({ d }) => {
-  const spanRef = useRef(null);
-  const barRef = useRef(null);
-  const [isBarLonger, setIsBarLonger] = useState(false);
-
-  useEffect(() => {
-    if (spanRef.current && barRef.current) {
-      const spanWidth = spanRef.current.offsetWidth;
-      const barWidth = barRef.current.offsetWidth;
-
-      // Cek siapa yang lebih panjang
-      if (barWidth > spanWidth) {
-        setIsBarLonger(true);
-      } else {
-        setIsBarLonger(false);
-      }
-    }
-  }, [d?.rate]); // Jalankan ulang jika rate berubah
-
-  return (
-    <div className={styles.progressContainer}>
-      <span
-        ref={spanRef}
-        style={{
-          color: isBarLonger ? "var(--platinum-gray)" : "var(--midnight-blue)",
-        }}
-      >
-        [{d?.code}]-{d?.name} [{d?.rate}]
-      </span>
-
-      <div
-        ref={barRef}
-        className={styles.progressBar}
-        style={{ width: d?.rate }}
-      ></div>
-    </div>
-  );
-};
+import DiagnosisItem from "../../components/items/DiagnosisItem";
 
 export default function Status() {
-  const { setIsLoading } = useOutletContext();
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { setIsLoading, data, firstLoad } = useOutletContext();
 
-  const [complaint, setComplaint] = useState({});
+  const { complaintData: complaint } = data;
+
   useEffect(() => {
-    setIsLoading(true);
+    const { setIsFirstLoad, isFirstLoad } = firstLoad;
 
-    const fetchData = async () => {
-      const complaintNumber = id
-        ? id
-        : localStorage.getItem("complaint_number");
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
 
-      const [complaintData] = await Promise.all([
-        showComplaint(complaintNumber),
-      ]);
-
-      const tempComplaint = complaintData?.data;
-      if (tempComplaint?.queue?.status === "done") {
-        localStorage.removeItem("complaint_number");
-
-        navigate(`/service/status/${tempComplaint?.complaint_number}`);
-      }
-
-      setComplaint(complaintData?.data);
+    setTimeout(() => {
+      setIsFirstLoad(false);
       setIsLoading(false);
-    };
-
-    fetchData();
+    }, 250);
 
     // eslint-disable-next-line
   }, []);
@@ -143,7 +85,7 @@ export default function Status() {
               <span>Diagnosis Result</span>
 
               {complaint?.diagnosis?.map((d) => (
-                <DiagnosisItem key={d?.code} d={d} />
+                <DiagnosisItem key={d?.code} d={d} styles={styles} />
               ))}
             </div>
           </section>
@@ -160,7 +102,10 @@ export default function Status() {
         <Link
           to={"/service/status"}
           className={styles.linkStatus}
-          style={{ backgroundColor: `var(--btn-save)` }}
+          style={{
+            backgroundColor: `var(--btn-save)`,
+            color: `var(--platinum-gray)`,
+          }}
         >
           <MdFactCheck size={30} /> Status
         </Link>

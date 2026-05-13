@@ -9,7 +9,7 @@ import NavbarSigned from "./NavbarSigned";
 import NavbarAdmin from "./NavbarAdmin";
 import { getPhoto } from "../../_services/files";
 
-export default function Header({ setIsLoading, setRefresh }) {
+export default function Header({ setIsLoading, setRefresh, userData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -32,18 +32,21 @@ export default function Header({ setIsLoading, setRefresh }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      setIsLoading(true);
-
       const token = localStorage.getItem("token");
       const localUser = localStorage.getItem("user");
       const parseUser = localUser ? JSON.parse(localUser) : {};
 
-      if (token) {
+      if (!userData) {
         setUser(parseUser);
+      } else {
+        setUser(userData);
+      }
+
+      if (token) {
         setIsLogin(true);
       }
 
-      setTimeout(() => setIsLoading(false), 1000);
+      setTimeout(() => setIsLoading(false), 5000);
     };
 
     fetchUser();

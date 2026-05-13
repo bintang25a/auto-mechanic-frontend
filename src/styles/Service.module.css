@@ -137,18 +137,23 @@
     }
     > a.linkApplication {
       border-color: var(--steel-blue);
+      color: var(--steel-blue);
     }
     a.linkService {
       border-color: var(--signal-orange);
+      color: var(--signal-orange);
     }
     a.linkStatus {
       border-color: var(--btn-save);
+      color: var(--btn-save);
     }
     a.linkDiagnosis {
       border-color: var(--btn-info);
+      color: var(--btn-info);
     }
     a.linkHistory {
       border-color: var(--btn-danger);
+      color: var(--btn-danger);
     }
     > a:hover {
       transform: scale(1.025);
@@ -303,7 +308,8 @@
       }
 
       > input,
-      > textarea {
+      > textarea,
+      > button {
         width: 100%;
         font-size: var(--fs-6);
         font-weight: 400;
@@ -316,6 +322,10 @@
         border-radius: var(--px-16);
 
         resize: none;
+      }
+
+      > button {
+        cursor: pointer;
       }
 
       .container {
@@ -358,6 +368,40 @@
         }
         > button:active {
           transform: scale(0.9);
+        }
+
+        .progressContainer {
+          width: 100%;
+          margin-top: var(--px-8);
+          border-radius: var(--px-16);
+          border: 1px solid var(--midnight-blue);
+          padding: var(--px-4) var(--px-16);
+          background-color: transparent;
+
+          box-shadow: 1px 0px 3px var(--gray-700);
+          position: relative;
+          overflow: hidden;
+
+          > span {
+            position: relative;
+            font-size: var(--fs-6);
+            font-weight: 500;
+            z-index: 2;
+            color: var(--steel-blue);
+          }
+
+          .progressBar {
+            position: absolute;
+            background-color: var(--steel-blue);
+            z-index: 1;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: var(--px-8);
+          }
+        }
+        .progressContainer:hover {
+          transform: scale(1.025);
         }
       }
     }
@@ -433,7 +477,6 @@
           font-weight: 500;
           z-index: 2;
           color: var(--steel-blue);
-          /* mix-blend-mode: difference; */
         }
 
         .progressBar {
@@ -443,7 +486,7 @@
           top: 0;
           left: 0;
           height: 100%;
-          border-radius: var(--px-16);
+          border-radius: var(--px-8);
         }
       }
       .progressContainer:hover {
@@ -484,12 +527,26 @@
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    flex-direction: unset;
     overflow: hidden;
 
     gap: var(--px-32);
 
     padding: 0 var(--px-128);
     padding-bottom: var(--px-32);
+
+    h1 {
+      width: 100%;
+    }
+
+    .apply {
+      flex: 1;
+    }
+
+    .status {
+      flex: 1;
+      min-width: 100%;
+    }
   }
 }

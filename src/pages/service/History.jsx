@@ -12,37 +12,36 @@ import {
 } from "react-icons/md";
 import styles from "../../styles/Service.module.css";
 import { useOutletContext, Link } from "react-router-dom";
-import { getComplaints } from "../../_services/complaints";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 
 export default function History() {
-  const { setIsLoading } = useOutletContext();
+  const { setIsLoading, data, firstLoad } = useOutletContext();
 
   const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
-    setIsLoading(true);
+    const { userData } = data;
 
-    const fetchData = async () => {
-      const localUser = localStorage.getItem("user");
-      const user = localUser ? JSON.parse(localUser) : {};
+    const { setIsFirstLoad, isFirstLoad } = firstLoad;
 
-      const [complaintsData] = await Promise.all([
-        getComplaints(`customer_id=${user?.uid}`),
-      ]);
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
 
-      const sortedData = [...(complaintsData?.data || [])].sort((a, b) => {
-        return new Date(b.created_at) - new Date(a.created_at);
-      });
+    const complaintsData = userData?.complaints || [];
 
-      localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
+    const sortedData = [...(complaintsData || [])].sort((a, b) => {
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
 
-      setComplaints(sortedData);
+    localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
 
-      setTimeout(() => setIsLoading(false), 1000);
-    };
+    setComplaints(sortedData);
 
-    fetchData();
+    setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 250);
 
     // eslint-disable-next-line
   }, []);
@@ -149,7 +148,10 @@ export default function History() {
         <Link
           to={"/service/history"}
           className={styles.linkHistory}
-          style={{ backgroundColor: `var(--btn-danger)` }}
+          style={{
+            backgroundColor: `var(--btn-danger)`,
+            color: `var(--platinum-gray)`,
+          }}
         >
           <MdRestore size={30} /> History
         </Link>

@@ -13,36 +13,34 @@ import styles from "../../styles/Service.module.css";
 import { Link, useOutletContext } from "react-router-dom";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { getComplaints } from "../../_services/complaints";
 
 export default function Service() {
-  const { setIsLoading } = useOutletContext();
+  const { setIsLoading, data, firstLoad } = useOutletContext();
 
   const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
-    setIsLoading(true);
+    const { setIsFirstLoad, isFirstLoad } = firstLoad;
+    const { userData } = data;
 
-    const fetchData = async () => {
-      const localUser = localStorage.getItem("user");
-      const user = localUser ? JSON.parse(localUser) : {};
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
 
-      const [complaintsData] = await Promise.all([
-        getComplaints(`customer_id=${user?.uid}`),
-      ]);
+    const complaintsData = userData?.complaints || [];
 
-      const sortedData = [...(complaintsData?.data || [])].sort((a, b) => {
-        return new Date(b.created_at) - new Date(a.created_at);
-      });
+    const sortedData = [...(complaintsData || [])].sort((a, b) => {
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
 
-      localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
+    localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
 
-      setComplaints(sortedData);
+    setComplaints(sortedData);
 
-      setTimeout(() => setIsLoading(false), 1000);
-    };
-
-    fetchData();
+    setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 250);
 
     // eslint-disable-next-line
   }, []);
