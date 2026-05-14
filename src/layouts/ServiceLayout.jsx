@@ -12,6 +12,7 @@ import { showComplaint } from "../_services/complaints";
 import { getSymptoms } from "../_services/symptoms";
 import { getDamages } from "../_services/damages";
 import { getRules } from "../_services/rules";
+import { getCurrentQ } from "../_services/queues";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -47,6 +48,7 @@ export default function ServiceLayout() {
   });
 
   const [user, setUser] = useState(null);
+  const [currentQ, setCurrentQ] = useState(null);
   const [complaint, setComplaint] = useState(null);
   const [symptoms, setSymptoms] = useState([]);
   const [damages, setDamages] = useState([]);
@@ -75,7 +77,11 @@ export default function ServiceLayout() {
       }
 
       try {
-        if (location?.pathname?.includes("/service/status")) {
+        if (location?.pathname === "/service") {
+          const [currentQdata] = await Promise.all([getCurrentQ()]);
+
+          setCurrentQ(currentQdata?.data);
+        } else if (location?.pathname?.includes("/service/status")) {
           const complaintNumber = id
             ? id
             : localStorage.getItem("complaint_number");
@@ -149,6 +155,7 @@ export default function ServiceLayout() {
             firstLoad: { isFirstLoad, setIsFirstLoad },
             data: {
               userData: user,
+              currentQdata: currentQ,
               complaintData: complaint,
               symptomsData: symptoms,
               damagesData: damages,

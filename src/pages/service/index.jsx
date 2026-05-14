@@ -13,29 +13,21 @@ import styles from "../../styles/Service.module.css";
 import { Link, useOutletContext } from "react-router-dom";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { getCurrentQ } from "../../_services/queues";
 
 export default function Service() {
   const { setIsLoading, data, firstLoad } = useOutletContext();
 
   const [complaints, setComplaints] = useState([]);
   const [user, setUser] = useState(null);
+  const [currentQ, setCurrentQ] = useState(null);
 
   useEffect(() => {
     const { setIsFirstLoad, isFirstLoad } = firstLoad;
-    const { userData } = data;
+    const { userData, currentQdata } = data;
 
     if (!isFirstLoad) {
       setIsLoading(true);
     }
-
-    const fetchData = async () => {
-      const [currentQdata] = await Promise.all([getCurrentQ()]);
-
-      console.log(currentQdata);
-    };
-
-    fetchData();
 
     const complaintsData = userData?.complaints || [];
 
@@ -46,6 +38,7 @@ export default function Service() {
     localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
 
     setComplaints(sortedData);
+    setCurrentQ(currentQdata);
     setUser(userData);
 
     let conditionTimeout;
@@ -125,7 +118,10 @@ export default function Service() {
       </section>
 
       <section className={styles.currentQ}>
-        <h2>Current Queue</h2>
+        <h2>{currentQ?.queue_number}</h2>
+
+        <span>Status: {currentQ?.status}</span>
+        <span>Esitimate: 36 min</span>
       </section>
 
       <section className={styles.action}>
