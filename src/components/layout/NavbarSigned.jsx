@@ -15,7 +15,7 @@ export default function NavbarSigned({ isOpen, isTablet, user, handleLogout }) {
     navbar: `${styles.navbar} ${isOpen && "open"}`,
     profile: isTablet ? styles?.profile : styles.profileOff,
     photo: styles.photo,
-    text: styles.text
+    text: styles.text,
   };
 
   return (
@@ -37,24 +37,30 @@ export default function NavbarSigned({ isOpen, isTablet, user, handleLogout }) {
         </button>
       </div>
 
-      {(user?.role === "admin" || user?.role === "staff") && (
+      <Link to={"/"}>
+        <MdHome /> Home
+      </Link>
+
+      {(user?.role !== "customer") && (
         <Link to={`/${user?.role}`}>
           <MdDashboard /> Dashboard
         </Link>
       )}
 
-      <Link to={"/"}>
-        <MdHome /> Home
-      </Link>
-      <Link to={"/service"}>
-        <MdAppRegistration /> Service Application
-      </Link>
-      <Link to={"/service/status"}>
-        <MdPublishedWithChanges /> Service Status
-      </Link>
-      <Link to={"/service/history"}>
-        <MdHistory /> Service History
-      </Link>
+      {(user?.role === "admin" || user?.role === "customer") && (
+        <>
+          <Link to={"/service"}>
+            <MdAppRegistration /> Service Application
+          </Link>
+          <Link to={"/service/status"}>
+            <MdPublishedWithChanges /> Service Status
+          </Link>
+          <Link to={"/service/history"}>
+            <MdHistory /> Service History
+          </Link>
+        </>
+      )}
+
       <Link to={"/profile"}>
         <MdPerson /> Profile
       </Link>

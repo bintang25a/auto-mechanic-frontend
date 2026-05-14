@@ -13,6 +13,7 @@ import styles from "../../styles/Service.module.css";
 import { Link, useOutletContext } from "react-router-dom";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import { getCurrentQ } from "../../_services/queues";
 
 export default function Service() {
   const { setIsLoading, data, firstLoad } = useOutletContext();
@@ -27,6 +28,14 @@ export default function Service() {
     if (!isFirstLoad) {
       setIsLoading(true);
     }
+
+    const fetchData = async () => {
+      const [currentQdata] = await Promise.all([getCurrentQ()]);
+
+      console.log(currentQdata);
+    };
+
+    fetchData();
 
     const complaintsData = userData?.complaints || [];
 
@@ -113,6 +122,10 @@ export default function Service() {
         <Link className={styles.profile} to={"/profile"}>
           <MdPerson size={40} />
         </Link>
+      </section>
+
+      <section className={styles.currentQ}>
+        <h2>Current Queue</h2>
       </section>
 
       <section className={styles.action}>

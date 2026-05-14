@@ -5,6 +5,11 @@ export const getQueues = async (query) => {
   return data;
 };
 
+export const getCurrentQ = async () => {
+  const { data } = await API.get(`/queues/current`);
+  return data;
+};
+
 export const showQueue = async (id) => {
   try {
     const { data } = await API.get(`/queues/${id}`);

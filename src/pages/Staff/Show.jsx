@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/Staff.module.css";
 import { showComplaint } from "../../_services/complaints";
-import { useOutletContext, useParams } from "react-router-dom";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 import {
   MdCancel,
   MdCheckCircle,
@@ -11,6 +11,7 @@ import {
 import DiagnosisItem from "../../components/items/DiagnosisItem";
 import { getUsers } from "../../_services/users";
 import { updateQueue } from "../../_services/queues";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export default function Show() {
   const { setIsLoading } = useOutletContext();
@@ -108,7 +109,14 @@ export default function Show() {
 
   return (
     <main className={styles.main}>
-      <h1>{complaint?.complaint_number}</h1>
+      <h1>
+        {complaint?.complaint_number}
+
+        <Link to={"/staff"}>
+          <FaArrowLeft />
+          Back
+        </Link>
+      </h1>
 
       <section className={styles.status}>
         <h2>Status</h2>
@@ -179,6 +187,7 @@ export default function Show() {
       </section>
 
       <section className={styles.action}>
+        <h2>Change Status</h2>
         <div className={styles.inputContainer}>
           <label htmlFor="mechanic_id">Select Mechanic</label>
           <select

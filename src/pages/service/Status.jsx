@@ -9,6 +9,7 @@ import {
   MdRestore,
 } from "react-icons/md";
 import DiagnosisItem from "../../components/items/DiagnosisItem";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export default function Status() {
   const { setIsLoading, data, firstLoad } = useOutletContext();
@@ -47,10 +48,23 @@ export default function Status() {
   return (
     <main className={styles.main}>
       {!complaint?.complaint_number ? (
-        <h1>No service found, Please make an apply first</h1>
+        <h1>
+          No service found, Please make an apply first
+          <Link to={"/service"}>
+            <FaArrowLeft />
+            Back
+          </Link>
+        </h1>
       ) : (
         <>
-          <h1>{complaint?.complaint_number}</h1>
+          <h1>
+            {complaint?.complaint_number}
+
+            <Link to={"/service"}>
+              <FaArrowLeft />
+              Back
+            </Link>
+          </h1>
 
           <section className={styles.status}>
             <h2>Status</h2>
