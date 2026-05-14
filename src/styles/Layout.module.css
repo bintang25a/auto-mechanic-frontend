@@ -327,6 +327,7 @@
       border: none;
 
       position: relative;
+      cursor: pointer;
 
       .photo {
         width: var(--px-48);
@@ -350,19 +351,20 @@
 
       > button {
         position: absolute;
-        right: var(--px-16);
-        top: 50%;
-        transform: translateY(-50%);
+        right: var(--px-4);
+        top: 200%;
 
-        padding: var(--px-8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: var(--px-4) var(--px-16);
         border-radius: var(--px-8);
         background-color: var(--btn-danger);
 
-        font-size: var(--fs-10);
+        font-size: var(--fs-6);
         color: var(--platinum-gray);
         cursor: pointer;
-
-        display: none;
       }
       > button:hover {
         background-color: var(--signal-orange);

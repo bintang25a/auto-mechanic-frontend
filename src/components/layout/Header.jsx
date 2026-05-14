@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MdClose, MdMenu } from "react-icons/md";
+import { MdClose, MdLogout, MdMenu } from "react-icons/md";
 import logo from "/images/logo/logo-nobg.png";
 import styles from "../../styles/Layout.module.css";
 import { logout } from "../../_services/auth";
@@ -71,6 +71,7 @@ export default function Header({ setIsLoading, setRefresh, userData }) {
   useEffect(() => {
     const handleResize = () => {
       setIsTablet(window.innerWidth <= 768);
+      setIsOpen(false);
     };
 
     window.addEventListener("resize", handleResize);
@@ -81,6 +82,10 @@ export default function Header({ setIsLoading, setRefresh, userData }) {
   }, []);
 
   const path = useLocation();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [path]);
 
   const style = {
     header: `${styles.header} ${isScrolled ? styles.scrolled : ""}`,
@@ -119,22 +124,32 @@ export default function Header({ setIsLoading, setRefresh, userData }) {
         <NavbarAdmin handleLogout={handleLogout} setRefresh={setRefresh} />
       )}
 
-      <div className={style.profile}>
-        <div className={style.photo}>
-          {user?.photo ? (
-            <img src={getPhoto(user?.photo)} alt="Photo" />
-          ) : (
-            "Photo"
-          )}
-        </div>
+      {user?.uid && (
+        <div className={style.profile} onClick={() => setIsOpen(!isOpen)}>
+          <button
+            title="logout"
+            onClick={handleLogout}
+            style={{ display: isOpen ? "flex" : "none" }}
+          >
+            <MdLogout /> Logout
+          </button>
 
-        <div className={style.text}>
-          <h2>{user?.name}</h2>
-          <span>
-            {user?.role?.toUpperCase()} {isTablet && user?.email}
-          </span>
+          <div className={style.photo}>
+            {user?.photo ? (
+              <img src={getPhoto(user?.photo)} alt="Photo" />
+            ) : (
+              "Photo"
+            )}
+          </div>
+
+          <div className={style.text}>
+            <h2>{user?.name}</h2>
+            <span>
+              {user?.role?.toUpperCase()} {isTablet && user?.email}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }

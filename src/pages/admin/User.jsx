@@ -147,6 +147,10 @@ export default function User() {
           name: "Customer",
           value: "customer",
         },
+        {
+          name: "Mechanic",
+          value: "mechanic",
+        },
       ],
     },
     {
