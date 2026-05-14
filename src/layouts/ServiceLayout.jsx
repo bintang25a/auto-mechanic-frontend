@@ -57,9 +57,11 @@ export default function ServiceLayout() {
   const { id } = useParams();
 
   useEffect(() => {
-    const initApp = async () => {
-      setIsChecking(true);
+    setIsChecking(true);
+  }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
       const localUser = localStorage.getItem("user");
       const userParse = localUser ? JSON.parse(localUser) : null;
 
@@ -71,13 +73,7 @@ export default function ServiceLayout() {
           console.error("Gagal ambil user", error);
         }
       }
-    };
 
-    initApp();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
       try {
         if (location?.pathname?.includes("/service/status")) {
           const complaintNumber = id
@@ -89,10 +85,12 @@ export default function ServiceLayout() {
           ]);
 
           const tempComplaint = complaintData?.data;
-          if (tempComplaint?.queue?.status === "done") {
-            localStorage.removeItem("complaint_number");
-
+          const operator1 = location?.pathname?.includes("/service/status/");
+          const operator2 = tempComplaint?.queue?.status === "done";
+          if (operator2 && !operator1) {
             navigate(`/service/status/${tempComplaint?.complaint_number}`);
+
+            localStorage.removeItem("complaint_number");
           }
 
           setComplaint(complaintData?.data);
@@ -122,7 +120,6 @@ export default function ServiceLayout() {
         });
       } finally {
         setIsChecking(false);
-        setIsLoading(false);
       }
     };
 

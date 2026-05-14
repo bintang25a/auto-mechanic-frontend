@@ -23,10 +23,24 @@ export default function Add() {
       setIsLoading(true);
     }
 
-    setTimeout(() => {
+    let conditionTimeout;
+
+    if (symptoms) {
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
       setIsFirstLoad(false);
       setIsLoading(false);
-    }, 250);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
 
     // eslint-disable-next-line
   }, []);

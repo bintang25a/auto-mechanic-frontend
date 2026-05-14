@@ -22,10 +22,24 @@ export default function Status() {
       setIsLoading(true);
     }
 
-    setTimeout(() => {
+    let complaintTimeout;
+
+    if (complaint) {
+      complaintTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
       setIsFirstLoad(false);
       setIsLoading(false);
-    }, 250);
+    }, 5000);
+
+    return () => {
+      clearTimeout(complaintTimeout);
+      clearTimeout(overlimitTimeout);
+    };
 
     // eslint-disable-next-line
   }, []);
@@ -46,7 +60,7 @@ export default function Status() {
             </div>
             <div className={styles.divider}>
               <span>: {complaint?.queue?.queue_number}</span>
-              <span>: {complaint?.queue?.status}</span>
+              <span>: {complaint?.queue?.status?.toUpperCase()}</span>
             </div>
           </section>
 

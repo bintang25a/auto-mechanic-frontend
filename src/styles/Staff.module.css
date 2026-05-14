@@ -52,6 +52,8 @@
 
       border-radius: var(--px-16);
       background-color: var(--white);
+
+      cursor: pointer;
     }
 
     > button:hover {
@@ -61,6 +63,35 @@
     }
     > button:active {
       transform: scale(0.9);
+    }
+
+    .inputContainer {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--px-8);
+
+      > label {
+        width: 100%;
+        font-size: var(--fs-6);
+        font-weight: 600;
+        text-align: left;
+        color: var(--midnight-blue);
+      }
+
+      > select {
+        width: 100%;
+        font-size: var(--fs-6);
+        font-weight: 400;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        overflow: hidden;
+
+        padding: var(--px-4) var(--px-16);
+        border-radius: 8px;
+        border: 1px solid var(--midnight-blue);
+        color: var(--midnight-blue);
+      }
     }
   }
 
@@ -166,6 +197,97 @@
         transform: scale(1.05);
         cursor: pointer;
       }
+    }
+  }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+
+    h2 {
+      width: 100%;
+      font-size: var(--fs-8);
+      font-weight: 800;
+      color: var(--midnight-blue);
+    }
+
+    .divider {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      justify-content: start;
+      border-top: 1px solid var(--midnight-blue);
+      border-bottom: 1px solid var(--midnight-blue);
+      padding: var(--px-8);
+      margin: var(--px-16) 0;
+      
+      > span {
+        font-size: var(--fs-7);
+        font-weight: 400;
+        color: var(--midnight-blue);
+        overflow: hidden;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .progressContainer {
+        width: 100%;
+        margin-top: var(--px-8);
+        border-radius: var(--px-16);
+        border: 1px solid var(--midnight-blue);
+        padding: var(--px-4) var(--px-16);
+        background-color: transparent;
+
+        box-shadow: 1px 0px 3px var(--gray-700);
+        position: relative;
+        overflow: hidden;
+
+        > span {
+          position: relative;
+          font-size: var(--fs-6);
+          font-weight: 500;
+          z-index: 2;
+          color: var(--steel-blue);
+        }
+
+        .progressBar {
+          position: absolute;
+          background-color: var(--steel-blue);
+          z-index: 1;
+          top: 0;
+          left: 0;
+          height: 100%;
+          border-radius: var(--px-8);
+        }
+      }
+      .progressContainer:hover {
+        transform: scale(1.025);
+      }
+    }
+    .divider:first-of-type {
+      > span {
+        font-weight: 500;
+        color: var(--gray-900);
+      }
+    }
+    .divider:last-of-type {
+      flex: 1;
+    }
+    .divider:nth-of-type(2):not(:last-of-type) {
+      width: 100%;
+    }
+
+    .description {
+      width: 100%;
+      border-top: 1px solid var(--midnight-blue);
+      border-bottom: 1px solid var(--midnight-blue);
+      padding: var(--px-8);
+      margin: var(--px-16) 0;
+
+      font-size: var(--fs-7);
+      font-weight: 400;
+      color: var(--midnight-blue);
+      text-align: justify;
     }
   }
 

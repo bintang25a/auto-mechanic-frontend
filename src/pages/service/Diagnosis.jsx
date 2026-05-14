@@ -26,10 +26,25 @@ export default function Diagnosis() {
       setIsLoading(true);
     }
 
-    setTimeout(() => {
+    const condition = Boolean(symptoms && damages && rules);
+    let conditionTimeout;
+
+    if (condition) {
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
       setIsFirstLoad(false);
       setIsLoading(false);
-    }, 250);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
 
     // eslint-disable-next-line
   }, []);

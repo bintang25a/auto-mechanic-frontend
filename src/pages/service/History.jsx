@@ -38,10 +38,24 @@ export default function History() {
 
     setComplaints(sortedData);
 
-    setTimeout(() => {
+    let conditionTimeout;
+
+    if (sortedData) {
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
       setIsFirstLoad(false);
       setIsLoading(false);
-    }, 250);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
 
     // eslint-disable-next-line
   }, []);
@@ -96,7 +110,7 @@ export default function History() {
 
           {complaints?.map((complaint) => (
             <Link
-              to={`status/${complaint?.complaint_number}`}
+              to={`/service/status/${complaint?.complaint_number}`}
               key={complaint?.complaint_number}
               className={styles.card}
             >

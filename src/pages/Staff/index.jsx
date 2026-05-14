@@ -9,7 +9,6 @@ import styles from "../../styles/Staff.module.css";
 import { useOutletContext, Link } from "react-router-dom";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
 import { getQueues } from "../../_services/queues";
-import { showUser } from "../../_services/users";
 
 export default function DashboardStaff() {
   const { setIsLoading } = useOutletContext();
@@ -21,12 +20,9 @@ export default function DashboardStaff() {
     setIsLoading(true);
 
     const fetchData = async () => {
-      const [queueData, userData] = await Promise.all([
+      const [queueData] = await Promise.all([
         getQueues(`status=${status}`),
-        showUser("bintang25a"),
       ]);
-
-      console.log(userData);
 
       setQueues(queueData?.data);
 

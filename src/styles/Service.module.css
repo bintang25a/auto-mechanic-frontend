@@ -134,6 +134,8 @@
       border-radius: var(--px-16);
       border: 2px solid var(--btn-save);
       background-color: var(--white);
+
+      cursor: pointer;
     }
     > a.linkApplication {
       border-color: var(--steel-blue);

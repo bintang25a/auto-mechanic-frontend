@@ -18,6 +18,7 @@ export default function Service() {
   const { setIsLoading, data, firstLoad } = useOutletContext();
 
   const [complaints, setComplaints] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const { setIsFirstLoad, isFirstLoad } = firstLoad;
@@ -36,11 +37,26 @@ export default function Service() {
     localStorage.setItem("complaint_number", sortedData[0]?.complaint_number);
 
     setComplaints(sortedData);
+    setUser(userData);
 
-    setTimeout(() => {
+    let conditionTimeout;
+
+    if (sortedData) {
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
       setIsFirstLoad(false);
       setIsLoading(false);
-    }, 250);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
 
     // eslint-disable-next-line
   }, []);
@@ -74,10 +90,12 @@ export default function Service() {
     <main className={styles.main}>
       <h1>Service Dashboard</h1>
       <section className={styles.information}>
-        <h2>Bintang Al Fizar</h2>
-        <span>bintang25a || bintangalfizar25@gmail.com</span>
-        <span>Member at: 24 Desember 2026</span>
-        <span>Total Service: 80</span>
+        <h2>{user?.name}</h2>
+        <span>
+          {user?.uid} || {user?.email}
+        </span>
+        <span>Member at: {formatedDate(user?.created_at)}</span>
+        <span>Total Service: {user?.complaints?.length}</span>
 
         {complaints[0]?.queue?.status !== "done" && complaints[0] && (
           <Link className={styles.status} to={"status"}>
