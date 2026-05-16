@@ -27,6 +27,7 @@ export default function Diagnosis() {
     }
 
     const condition = Boolean(symptoms && damages && rules);
+
     let conditionTimeout;
 
     if (condition) {

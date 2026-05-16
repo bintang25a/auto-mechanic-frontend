@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../styles/Service.module.css";
 import { Link, useOutletContext } from "react-router-dom";
 import {
@@ -16,6 +16,7 @@ export default function Status() {
 
   const { complaintData: complaint } = data;
 
+  const [queue, setQueue] = useState(null);
   useEffect(() => {
     const { setIsFirstLoad, isFirstLoad } = firstLoad;
 
@@ -26,6 +27,8 @@ export default function Status() {
     let complaintTimeout;
 
     if (complaint) {
+      setQueue(complaint?.queue);
+
       complaintTimeout = setTimeout(() => {
         setIsFirstLoad(false);
         setIsLoading(false);
@@ -95,6 +98,22 @@ export default function Status() {
               <span>: {complaint?.license_number}</span>
             </div>
           </section>
+
+          {queue?.mechanic_id && (
+            <section className={styles.status}>
+              <h2>Mechanic</h2>
+              <div className={styles.divider}>
+                <span>ID</span>
+                <span>Name</span>
+                <span>Email</span>
+              </div>
+              <div className={styles.divider}>
+                <span>: {queue?.mechanic_id}</span>
+                <span>: {queue?.mechanic_name}</span>
+                <span>: {queue?.mechanic_email}</span>
+              </div>
+            </section>
+          )}
 
           <section className={styles.status}>
             <h2>Service</h2>

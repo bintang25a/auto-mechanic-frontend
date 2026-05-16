@@ -95,8 +95,6 @@ export default function ServiceLayout() {
           const operator2 = tempComplaint?.queue?.status === "done";
           if (operator2 && !operator1) {
             navigate(`/service/status/${tempComplaint?.complaint_number}`);
-
-            localStorage.removeItem("complaint_number");
           }
 
           setComplaint(complaintData?.data);

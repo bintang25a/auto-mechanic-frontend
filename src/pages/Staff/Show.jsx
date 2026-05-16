@@ -17,8 +17,8 @@ export default function Show() {
   const { setIsLoading } = useOutletContext();
   const { id } = useParams();
 
-  const [complaint, setComplaint] = useState({});
-  const [queue, setQueue] = useState({});
+  const [complaint, setComplaint] = useState(null);
+  const [queue, setQueue] = useState(null);
   const [status, setStatus] = useState("waiting");
   const [mechanics, setMechanics] = useState([]);
 
@@ -130,22 +130,6 @@ export default function Show() {
         </div>
       </section>
 
-      {queue?.mechanic_id && (
-        <section className={styles.status}>
-          <h2>Mechanic Profile</h2>
-          <div className={styles.divider}>
-            <span>ID</span>
-            <span>Name</span>
-            <span>Email</span>
-          </div>
-          <div className={styles.divider}>
-            <span>: {queue?.mechanic_id}</span>
-            <span>: {queue?.mechanic_name}</span>
-            <span>: {queue?.mechanic_email}</span>
-          </div>
-        </section>
-      )}
-
       <section className={styles.status}>
         <h2>Customer</h2>
         <div className={styles.divider}>
@@ -163,6 +147,22 @@ export default function Show() {
           <span>: {complaint?.license_number}</span>
         </div>
       </section>
+
+      {queue?.mechanic_id && (
+        <section className={styles.status}>
+          <h2>Mechanic</h2>
+          <div className={styles.divider}>
+            <span>ID</span>
+            <span>Name</span>
+            <span>Email</span>
+          </div>
+          <div className={styles.divider}>
+            <span>: {queue?.mechanic_id}</span>
+            <span>: {queue?.mechanic_name}</span>
+            <span>: {queue?.mechanic_email}</span>
+          </div>
+        </section>
+      )}
 
       <section className={styles.status}>
         <h2>Service</h2>

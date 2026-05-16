@@ -101,7 +101,7 @@ export default function Service() {
 
         {complaints[0]?.queue?.status !== "done" && complaints[0] && (
           <Link className={styles.status} to={"status"}>
-            {complaints[0]?.complaint_number}: {complaints[0]?.queue?.status}
+            {complaints[0]?.queue?.number}: {complaints[0]?.queue?.status}
             {complaints[0]?.queue?.status === "waiting" ? (
               <MdHourglassEmpty size={25} />
             ) : complaints[0]?.queue?.status === "process" ? (
@@ -117,12 +117,20 @@ export default function Service() {
         </Link>
       </section>
 
-      <section className={styles.currentQ}>
-        <h2>{currentQ?.queue_number}</h2>
+      {currentQ && (
+        <section className={styles.currentQ}>
+          <h2>Current Queue</h2>
 
-        <span>Status: {currentQ?.status}</span>
-        <span>Esitimate: 36 min</span>
-      </section>
+          <span>{currentQ?.queue_number}</span>
+          <span>Status: {currentQ?.status}</span>
+          <span>
+            Esitimate:{" "}
+            {currentQ?.queue_number === complaints[0]?.queue?.number
+              ? "soon"
+              : "36 min"}
+          </span>
+        </section>
+      )}
 
       <section className={styles.action}>
         <Link to={"add"} className={styles.linkService}>
