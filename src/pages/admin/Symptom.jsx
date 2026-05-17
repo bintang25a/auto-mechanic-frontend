@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import {
   createSymptom,
   deleteSymptom,
-  getSymptoms,
   showSymptom,
   updateSymptom,
 } from "../../_services/symptoms";
@@ -18,88 +17,85 @@ import { useOutletContext } from "react-router-dom";
 import FormModal from "../../components/overlay/FormModal";
 
 export default function Symptom() {
-  const { setIsLoading, setInfoModal, setConfirmModal, refresh } =
-    useOutletContext();
+  const {
+    setIsLoading,
+    setInfoModal,
+    setConfirmModal,
+    feature,
+    action,
+    data,
+    firstLoad,
+  } = useOutletContext();
+
+  const { symptomsData } = data;
+  const { handleSearchChange, handleSearchSubmit, handleChangePage } = action;
+  const { totalPages, currentPage, setCurrentPage, search, setSearch } =
+    feature;
 
   const columns = ["symptom_code", "name"];
-  const [symptoms, setSymptoms] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState({
-    column: "",
-    value: "",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      const [symptomsData] = await Promise.all([
-        getSymptoms(`page=${currentPage}&per_page=20`),
-      ]);
-
-      setSymptoms(symptomsData?.data);
-      setCurrentPage(symptomsData?.current_page);
-      setTotalPages(Math.ceil(Number(symptomsData?.total) / 20));
-
-      setTimeout(() => setIsLoading(false), 250);
-    };
-
-    fetchData();
-    // eslint-disable-next-line
-  }, [refresh]);
-
-  const handleSearchChange = (e) => {
-    const { name, value } = e.target;
-
-    setSearch({
-      ...search,
-      [name]: value,
-    });
-  };
-
-  const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const isEmpty = !search?.value || !search?.column;
-    const query = isEmpty
-      ? "&per_page=20"
-      : `${search?.column}=${search?.value}&per_page=20`;
-
-    const [symptomsData] = await Promise.all([getSymptoms(query)]);
-
-    setSymptoms(symptomsData?.data);
-    setCurrentPage(symptomsData?.current_page);
-    setTotalPages(Math.ceil(Number(symptomsData?.total) / 20));
-
-    setTimeout(() => setIsLoading(false), 250);
-  };
-
-  const handleChangePage = async (isNext) => {
-    setIsLoading(true);
-
-    let page = isNext ? currentPage + 1 : currentPage - 1;
-
-    const query =
-      search?.column && search?.value
-        ? `${search?.column}=${search?.value}`
-        : "";
-
-    const [symptomsData] = await Promise.all([
-      getSymptoms(`page=${page}&${query}&per_page=20`),
-    ]);
-
-    setCurrentPage(page);
-    setSymptoms(symptomsData?.data);
-    setTimeout(() => setIsLoading(false), 250);
-  };
 
   const [isView, setIsView] = useState(false);
   const [editData, setEditData] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [symptoms, setSymptoms] = useState([]);
 
-  const fields = [
+  useEffect(() => {
+    const { isFirstLoad } = firstLoad;
+
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
+
+    setCurrentPage(1);
+    setSearch({
+      column: "",
+      value: "",
+    });
+
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const { setIsFirstLoad } = firstLoad;
+
+    let conditionTimeout;
+
+    if (symptomsData) {
+      setSymptoms(symptomsData);
+
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 500);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
+
+    // eslint-disable-next-line
+  }, [symptomsData]);
+
+  const addFields = [
+    {
+      name: "symptom_code",
+      label: "Symptom Code",
+      type: "text",
+    },
+    {
+      name: "name",
+      label: "Name",
+      type: "text",
+    },
+  ];
+
+  const viewFields = [
     {
       name: "symptom_code",
       label: "Symptom Code",
@@ -197,12 +193,6 @@ export default function Symptom() {
     }
   };
 
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setEditData(false);
-    setIsView(false);
-  };
-
   const handleDelete = (id) => {
     const onSubmit = async () => {
       setConfirmModal({});
@@ -245,8 +235,14 @@ export default function Symptom() {
     });
   };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setEditData(false);
+    setIsView(false);
+  };
+
   return (
-    <div className={styles.userPage}>
+    <div className={styles.page}>
       <header className={styles.header}>
         <h2>Symptoms Data</h2>
 
@@ -353,7 +349,7 @@ export default function Symptom() {
 
       {modalOpen && (
         <FormModal
-          fields={fields}
+          fields={isView ? viewFields : addFields}
           data={editData}
           onClose={handleModalClose}
           onSubmit={handleSubmit}

@@ -44,7 +44,7 @@ export const me = async () => {
   try {
     const response = await API.get("/me");
 
-    return response?.data?.data;
+    return response?.data;
   } catch (error) {
     console.log(error);
     throw error?.response?.data;

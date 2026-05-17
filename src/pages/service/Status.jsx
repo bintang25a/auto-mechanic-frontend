@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "../../styles/Service.module.css";
 import { Link, useOutletContext } from "react-router-dom";
 import {
@@ -16,7 +16,8 @@ export default function Status() {
 
   const { complaintData: complaint } = data;
 
-  const [queue, setQueue] = useState(null);
+  const queue = complaint?.queue;
+
   useEffect(() => {
     const { setIsFirstLoad, isFirstLoad } = firstLoad;
 
@@ -27,8 +28,6 @@ export default function Status() {
     let complaintTimeout;
 
     if (complaint) {
-      setQueue(complaint?.queue);
-
       complaintTimeout = setTimeout(() => {
         setIsFirstLoad(false);
         setIsLoading(false);

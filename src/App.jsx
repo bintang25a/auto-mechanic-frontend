@@ -17,6 +17,7 @@ import Diagnosis from "./pages/service/Diagnosis";
 import StaffLayout from "./layouts/StaffLayout";
 import DashboardStaff from "./pages/Staff";
 import Show from "./pages/Staff/Show";
+import Complaint from "./pages/admin/Complaint";
 
 export default function App() {
   return (
@@ -43,7 +44,8 @@ export default function App() {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="users" element={<User />} />
-          <Route path="complaints" element={<Symptom />} />
+          <Route path="complaints" element={<Complaint />} />
+          <Route path="complaints/:id" element={<Status />} />
           <Route path="symptoms" element={<Symptom />} />
           <Route path="damages" element={<Damage />} />
           <Route path="rules" element={<Rule />} />

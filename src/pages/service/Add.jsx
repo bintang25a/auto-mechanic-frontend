@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/Service.module.css";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
-import { FaPaperPlane } from "react-icons/fa6";
+import { FaArrowLeft, FaPaperPlane } from "react-icons/fa6";
 import { createComplaint } from "../../_services/complaints";
 import {
   MdAnalytics,
@@ -14,6 +14,12 @@ import {
 export default function Add() {
   const { setIsLoading, setInfoModal, firstLoad, data } = useOutletContext();
   const { symptomsData: symptoms } = data;
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredSymptoms = symptoms.filter((symptom) =>
+    symptom?.name?.toLowerCase().includes(searchQuery?.toLowerCase())
+  );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +31,7 @@ export default function Add() {
 
     let conditionTimeout;
 
-    if (symptoms) {
+    if (filteredSymptoms) {
       conditionTimeout = setTimeout(() => {
         setIsFirstLoad(false);
         setIsLoading(false);
@@ -45,7 +51,7 @@ export default function Add() {
     // eslint-disable-next-line
   }, []);
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(null);
   const [selectSymptoms, setSelectSymptoms] = useState([]);
 
   const handleFormChange = (e) => {
@@ -112,18 +118,19 @@ export default function Add() {
     }
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const filteredSymptoms = symptoms.filter((symptom) =>
-    symptom?.name?.toLowerCase().includes(searchQuery?.toLowerCase())
-  );
-
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
   return (
     <main className={styles.main}>
-      <h1>Apply Service</h1>
+      <h1>
+        Apply Service{" "}
+        <Link to={"/service"}>
+          <FaArrowLeft />
+          Back
+        </Link>
+      </h1>
 
       <form onSubmit={handleSubmit}>
         <section className={styles.apply}>

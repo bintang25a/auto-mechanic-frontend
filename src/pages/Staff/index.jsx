@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   MdCancel,
   MdCheckCircle,
@@ -8,31 +8,47 @@ import {
 import styles from "../../styles/Staff.module.css";
 import { useOutletContext, Link } from "react-router-dom";
 import { FaCalendarDays, FaMotorcycle } from "react-icons/fa6";
-import { getQueues } from "../../_services/queues";
 
 export default function DashboardStaff() {
-  const { setIsLoading } = useOutletContext();
+  const { setIsLoading, data, firstLoad, setStatus, status } =
+    useOutletContext();
 
-  const [queues, setQueues] = useState([]);
-  const [status, setStatus] = useState("waiting");
+  const { queuesData: queues } = data;
 
   useEffect(() => {
-    setIsLoading(true);
+    const { isFirstLoad } = firstLoad;
 
-    const fetchData = async () => {
-      const [queueData] = await Promise.all([
-        getQueues(`status=${status}`),
-      ]);
-
-      setQueues(queueData?.data);
-
-      setTimeout(() => setIsLoading(false), 1000);
-    };
-
-    fetchData();
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
 
     // eslint-disable-next-line
-  }, [status]);
+  }, []);
+
+  useEffect(() => {
+    const { setIsFirstLoad } = firstLoad;
+
+    let conditionTimeout;
+
+    if (queues) {
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
+
+    // eslint-disable-next-line
+  }, [queues]);
 
   const formatedDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -74,6 +90,11 @@ export default function DashboardStaff() {
     };
   };
 
+  const handleChangeStatus = (stat) => {
+    setIsLoading(true);
+    setStatus(stat);
+  };
+
   return (
     <main className={styles.main}>
       <h1>Staff Dashboard</h1>
@@ -82,7 +103,7 @@ export default function DashboardStaff() {
         <button
           className={styles.waitingColor}
           style={status === "waiting" ? colorStyles() : {}}
-          onClick={() => setStatus("waiting")}
+          onClick={() => handleChangeStatus("waiting")}
         >
           <MdHourglassEmpty size={30} /> Waiting
         </button>
@@ -90,21 +111,21 @@ export default function DashboardStaff() {
         <button
           className={styles.processColor}
           style={status === "process" ? colorStyles() : {}}
-          onClick={() => setStatus("process")}
+          onClick={() => handleChangeStatus("process")}
         >
           <MdSync size={30} /> Process
         </button>
         <button
           className={styles.doneColor}
           style={status === "done" ? colorStyles() : {}}
-          onClick={() => setStatus("done")}
+          onClick={() => handleChangeStatus("done")}
         >
           <MdCheckCircle size={30} /> Done
         </button>
         <button
           className={styles.cancelColor}
           style={status === "cancel" ? colorStyles() : {}}
-          onClick={() => setStatus("cancel")}
+          onClick={() => handleChangeStatus("cancel")}
         >
           <MdCancel size={30} /> Cancel
         </button>
@@ -117,7 +138,7 @@ export default function DashboardStaff() {
             ? " Queues"
             : status === "process"
             ? " On Working"
-            : " HIstory"}
+            : " History"}
         </h2>
 
         <div className={styles.container}>

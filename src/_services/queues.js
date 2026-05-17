@@ -10,16 +10,6 @@ export const getCurrentQ = async () => {
   return data;
 };
 
-export const showQueue = async (id) => {
-  try {
-    const { data } = await API.get(`/queues/${id}`);
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw error?.response?.data;
-  }
-};
-
 export const updateQueue = async (id, data) => {
   try {
     const response = await API.post(`queues/${id}`, data);

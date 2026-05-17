@@ -72,6 +72,7 @@ export default function FormModal({ fields, data, onSubmit, onClose, isView }) {
                       type={field?.type}
                       name={field?.name}
                       id={field?.name}
+                      placeholder={field?.placeholder || ""}
                       onChange={handleChange}
                       value={
                         field?.type !== "file" ? formData[field?.name] : null

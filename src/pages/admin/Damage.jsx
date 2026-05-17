@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import {
   createDamage,
   deleteDamage,
-  getDamages,
   showDamage,
   updateDamage,
 } from "../../_services/damages";
@@ -18,86 +17,85 @@ import { useOutletContext } from "react-router-dom";
 import FormModal from "../../components/overlay/FormModal";
 
 export default function Damage() {
-  const { setIsLoading, setInfoModal, setConfirmModal, refresh } =
-    useOutletContext();
+  const {
+    setIsLoading,
+    setInfoModal,
+    setConfirmModal,
+    feature,
+    action,
+    data,
+    firstLoad,
+  } = useOutletContext();
+
+  const { damagesData } = data;
+  const { handleSearchChange, handleSearchSubmit, handleChangePage } = action;
+  const { totalPages, currentPage, setCurrentPage, search, setSearch } =
+    feature;
 
   const columns = ["damage_code", "name"];
-  const [damages, setDamages] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState({
-    column: "",
-    value: "",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      const [damagesData] = await Promise.all([
-        getDamages(`page=${currentPage}&per_page=20`),
-      ]);
-
-      setDamages(damagesData?.data);
-      setCurrentPage(damagesData?.current_page);
-      setTotalPages(Math.ceil(Number(damagesData?.total) / 20));
-
-      setTimeout(() => setIsLoading(false), 250);
-    };
-
-    fetchData();
-    // eslint-disable-next-line
-  }, [refresh]);
-
-  const handleSearchChange = (e) => {
-    const { name, value } = e.target;
-
-    setSearch({
-      ...search,
-      [name]: value,
-    });
-  };
-
-  const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const isEmpty = !search?.value || !search?.column;
-    const query = isEmpty ? "" : `${search?.column}=${search?.value}`;
-
-    const [damagesData] = await Promise.all([getDamages(query)]);
-
-    setDamages(damagesData?.data);
-    setCurrentPage(damagesData?.current_page);
-    setTotalPages(Math.ceil(Number(damagesData?.total) / 20));
-
-    setTimeout(() => setIsLoading(false), 250);
-  };
-
-  const handleChangePage = async (isNext) => {
-    setIsLoading(true);
-
-    let page = isNext ? currentPage + 1 : currentPage - 1;
-
-    const query =
-      search?.column && search?.value
-        ? `${search?.column}=${search?.value}`
-        : "";
-
-    const [damagesData] = await Promise.all([
-      getDamages(`page=${page}&${query}&per_page=20`),
-    ]);
-
-    setCurrentPage(page);
-    setDamages(damagesData?.data);
-    setTimeout(() => setIsLoading(false), 250);
-  };
 
   const [isView, setIsView] = useState(false);
   const [editData, setEditData] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [damages, setDamages] = useState([]);
 
-  const fields = [
+  useEffect(() => {
+    const { isFirstLoad } = firstLoad;
+
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
+
+    setCurrentPage(1);
+    setSearch({
+      column: "",
+      value: "",
+    });
+
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const { setIsFirstLoad } = firstLoad;
+
+    let conditionTimeout;
+
+    if (damagesData) {
+      setDamages(damagesData);
+
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 500);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
+
+    // eslint-disable-next-line
+  }, [damagesData]);
+
+  const addFields = [
+    {
+      name: "damage_code",
+      label: "Damage Code",
+      type: "text",
+    },
+    {
+      name: "name",
+      label: "Name",
+      type: "text",
+    },
+  ];
+
+  const viewFields = [
     {
       name: "damage_code",
       label: "Damage Code",
@@ -164,7 +162,7 @@ export default function Damage() {
         const tempDamages = [...damages];
 
         const userIdx = tempDamages.findIndex(
-          (symptom) => symptom?.damage_code === editData?.damage_code
+          (damage) => damage?.damage_code === editData?.damage_code
         );
 
         if (userIdx !== -1) {
@@ -193,12 +191,6 @@ export default function Damage() {
     } finally {
       setTimeout(() => setIsLoading(false), 250);
     }
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setEditData(false);
-    setIsView(false);
   };
 
   const handleDelete = (id) => {
@@ -243,8 +235,14 @@ export default function Damage() {
     });
   };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setEditData(false);
+    setIsView(false);
+  };
+
   return (
-    <div className={styles.userPage}>
+    <div className={styles.page}>
       <header className={styles.header}>
         <h2>Damages Data</h2>
 
@@ -351,7 +349,7 @@ export default function Damage() {
 
       {modalOpen && (
         <FormModal
-          fields={fields}
+          fields={isView ? viewFields : addFields}
           data={editData}
           onClose={handleModalClose}
           onSubmit={handleSubmit}

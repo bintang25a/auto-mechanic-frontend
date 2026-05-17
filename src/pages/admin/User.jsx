@@ -10,105 +10,85 @@ import { useEffect, useState } from "react";
 import {
   createUser,
   deleteUser,
-  getUsers,
   showUser,
   updateUser,
 } from "../../_services/users";
 import { useOutletContext } from "react-router-dom";
 import FormModal from "../../components/overlay/FormModal";
+import { formatedDate } from "../../_utilities/formatedDate";
 
 export default function User() {
-  const { setIsLoading, setInfoModal, setConfirmModal, refresh } =
-    useOutletContext();
+  const {
+    setIsLoading,
+    setInfoModal,
+    setConfirmModal,
+    feature,
+    action,
+    data,
+    firstLoad,
+  } = useOutletContext();
+
+  const { usersData } = data;
+  const { handleSearchChange, handleSearchSubmit, handleChangePage } = action;
+  const { totalPages, currentPage, setCurrentPage, search, setSearch } =
+    feature;
 
   const columns = ["uid", "name", "email", "phone_number", "role"];
+
+  const [isView, setIsView] = useState(false);
+  const [editData, setEditData] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState({
-    column: "",
-    value: "",
-  });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const { isFirstLoad } = firstLoad;
+
+    if (!isFirstLoad) {
       setIsLoading(true);
+    }
 
-      const [usersData] = await Promise.all([getUsers(`page=${currentPage}`)]);
-
-      setUsers(usersData?.data);
-      setCurrentPage(usersData?.current_page);
-      setTotalPages(Math.ceil(Number(usersData?.total) / 20));
-
-      setTimeout(() => setIsLoading(false), 250);
-    };
-
-    fetchData();
-    // eslint-disable-next-line
-  }, [refresh]);
-
-  const handleSearchChange = (e) => {
-    const { name, value } = e.target;
-
+    setCurrentPage(1);
     setSearch({
-      ...search,
-      [name]: value,
+      column: "",
+      value: "",
     });
-  };
 
-  const handleSearchSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+    // eslint-disable-next-line
+  }, []);
 
-    const isEmpty = !search?.value || !search?.column;
-    const query = isEmpty ? "" : `${search?.column}=${search?.value}`;
+  useEffect(() => {
+    const { setIsFirstLoad } = firstLoad;
 
-    const [usersData] = await Promise.all([getUsers(query)]);
+    let conditionTimeout;
 
-    setUsers(usersData?.data);
-    setCurrentPage(usersData?.current_page);
-    setTotalPages(Math.ceil(Number(usersData?.total) / 20));
+    if (usersData) {
+      setUsers(usersData);
 
-    setTimeout(() => setIsLoading(false), 250);
-  };
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
 
-  const handleChangePage = async (isNext) => {
-    setIsLoading(true);
+    const overlimitTimeout = setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 5000);
 
-    let page = isNext ? currentPage + 1 : currentPage - 1;
-
-    const query =
-      search?.column && search?.value
-        ? `${search?.column}=${search?.value}`
-        : "";
-
-    const [usersData] = await Promise.all([getUsers(`page=${page}&${query}`)]);
-
-    setCurrentPage(page);
-    setUsers(usersData?.data);
-    setTimeout(() => setIsLoading(false), 250);
-  };
-
-  const formatedDate = (isoDate) => {
-    const date = new Date(isoDate);
-
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
     };
 
-    return date.toLocaleDateString("id-ID", options);
-  };
-
-  const [modalOpen, setModalOpen] = useState(false);
+    // eslint-disable-next-line
+  }, [usersData]);
 
   const fields = [
     {
       name: "photo",
       label: "Photo",
-      type: "file",
+      type: !isView ? "file" : "text",
+      placeholder: "Photo",
     },
     {
       name: "uid",
@@ -160,8 +140,6 @@ export default function User() {
     },
   ];
 
-  const [isView, setIsView] = useState(false);
-  const [editData, setEditData] = useState(false);
   const handleFetchUser = async (id, view = false) => {
     setIsLoading(true);
 
@@ -190,18 +168,12 @@ export default function User() {
 
     const payload = new FormData();
 
-    payload.append("uid", formData?.uid);
-    payload.append("name", formData?.name);
-    payload.append("email", formData?.email);
-    payload.append("phone_number", formData?.phone_number);
-    payload.append("role", formData?.role);
-
-    if (formData?.password) {
-      payload.append("password", formData?.password);
-    }
-
-    if (formData?.photo) {
-      payload.append("photo", formData?.photo);
+    if (formData) {
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          payload.append(key, value);
+        }
+      });
     }
 
     if (editData) {
@@ -248,12 +220,6 @@ export default function User() {
     }
   };
 
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setEditData(false);
-    setIsView(false);
-  };
-
   const handleDelete = (id) => {
     const onSubmit = async () => {
       setConfirmModal({});
@@ -296,8 +262,14 @@ export default function User() {
     });
   };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setEditData(false);
+    setIsView(false);
+  };
+
   return (
-    <div className={styles.userPage}>
+    <div className={styles.page}>
       <header className={styles.header}>
         <h2>Users Data</h2>
 

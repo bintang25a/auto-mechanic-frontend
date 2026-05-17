@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/Staff.module.css";
-import { showComplaint } from "../../_services/complaints";
-import { Link, useOutletContext, useParams } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import {
   MdCancel,
   MdCheckCircle,
@@ -9,18 +8,16 @@ import {
   MdSync,
 } from "react-icons/md";
 import DiagnosisItem from "../../components/items/DiagnosisItem";
-import { getUsers } from "../../_services/users";
 import { updateQueue } from "../../_services/queues";
 import { FaArrowLeft } from "react-icons/fa6";
 
 export default function Show() {
-  const { setIsLoading } = useOutletContext();
-  const { id } = useParams();
+  const { setIsLoading, setInfoModal, data, firstLoad, setStatus } =
+    useOutletContext();
 
-  const [complaint, setComplaint] = useState(null);
-  const [queue, setQueue] = useState(null);
-  const [status, setStatus] = useState("waiting");
-  const [mechanics, setMechanics] = useState([]);
+  const { complaintData: complaint, mechanicsData: mechanics } = data;
+
+  const queue = complaint?.queue;
 
   const [formData, setFormData] = useState({
     status: "",
@@ -28,45 +25,53 @@ export default function Show() {
   });
 
   useEffect(() => {
-    setIsLoading(true);
+    const { isFirstLoad } = firstLoad;
 
-    const fetchData = async () => {
-      const complaintNumber = id
-        ? id
-        : localStorage.getItem("complaint_number");
-
-      const [complaintData, usersData] = await Promise.all([
-        showComplaint(complaintNumber),
-        getUsers("role=mechanic"),
-      ]);
-
-      const tempComplaint = complaintData?.data;
-
-      setComplaint(complaintData?.data);
-      setQueue(tempComplaint?.queue);
-      setStatus(tempComplaint?.queue?.status);
-      setMechanics(usersData?.data);
-      setIsLoading(false);
-
-      setFormData({
-        ...formData,
-        mechanic_id: tempComplaint?.queue?.mechanic_id,
-      });
-    };
-
-    fetchData();
+    if (!isFirstLoad) {
+      setIsLoading(true);
+    }
 
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    const { setIsFirstLoad } = firstLoad;
+
+    let conditionTimeout;
+
+    if (complaint) {
+      setFormData({
+        status: queue?.status,
+        mechanic_id: queue?.mechanic_id,
+      });
+
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 250);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
+    };
+
+    // eslint-disable-next-line
+  }, [complaint]);
+
   const colorStyles = () => {
     return {
       backgroundColor:
-        status === "waiting"
+        queue?.status === "waiting"
           ? `var(--btn-warning)`
-          : status === "process"
+          : queue?.status === "process"
           ? `var(--btn-info)`
-          : status === "done"
+          : queue?.status === "done"
           ? `var(--btn-save)`
           : `var(--btn-danger)`,
       color: `var(--platinum-gray)`,
@@ -102,8 +107,13 @@ export default function Show() {
       setStatus(stat);
     } catch (error) {
       console.log(error?.message);
-    } finally {
-      setIsLoading(false);
+
+      setInfoModal({
+        isOpen: true,
+        isError: true,
+        title: "Update data failed",
+        message: error?.message,
+      });
     }
   };
 
@@ -208,7 +218,7 @@ export default function Show() {
 
         <button
           className={styles.waitingColor}
-          style={status === "waiting" ? colorStyles() : {}}
+          style={queue?.status === "waiting" ? colorStyles() : {}}
           onClick={() => handleSubmit("waiting")}
         >
           <MdHourglassEmpty size={30} /> Waiting
@@ -216,21 +226,21 @@ export default function Show() {
 
         <button
           className={styles.processColor}
-          style={status === "process" ? colorStyles() : {}}
+          style={queue?.status === "process" ? colorStyles() : {}}
           onClick={() => handleSubmit("process")}
         >
           <MdSync size={30} /> Process
         </button>
         <button
           className={styles.doneColor}
-          style={status === "done" ? colorStyles() : {}}
+          style={queue?.status === "done" ? colorStyles() : {}}
           onClick={() => handleSubmit("done")}
         >
           <MdCheckCircle size={30} /> Done
         </button>
         <button
           className={styles.cancelColor}
-          style={status === "cancel" ? colorStyles() : {}}
+          style={queue?.status === "cancel" ? colorStyles() : {}}
           onClick={() => handleSubmit("cancel")}
         >
           <MdCancel size={30} /> Cancel

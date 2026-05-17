@@ -7,25 +7,21 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import LoadingJump from "../components/overlay/JumpLoading";
 import ConfirmModal from "../components/overlay/ConfirmModal";
 import InfoModal from "../components/overlay/InfoModal";
-import { showUser } from "../_services/users";
 import { showComplaint } from "../_services/complaints";
 import { getSymptoms } from "../_services/symptoms";
 import { getDamages } from "../_services/damages";
 import { getRules } from "../_services/rules";
 import { getCurrentQ } from "../_services/queues";
+import { me } from "../_services/auth";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Memaksa scroll ke paling atas
     window.scrollTo(0, 0);
+  }, [pathname]);
 
-    // Atau jika ingin efek halus (smooth):
-    // window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  }, [pathname]); // Akan jalan setiap kali URL berubah
-
-  return null; // Komponen ini tidak perlu merender apa pun
+  return null;
 };
 
 export default function ServiceLayout() {
@@ -64,12 +60,27 @@ export default function ServiceLayout() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const localUser = localStorage.getItem("user");
-      const userParse = localUser ? JSON.parse(localUser) : null;
-
-      if (userParse?.uid) {
+      if (isChecking) {
         try {
-          const userData = await showUser(userParse?.uid);
+          const userData = await me();
+
+          const temp = userData?.data?.role;
+          if ((temp !== "customer" && temp !== "admin") || !userData) {
+            const onClose = () => {
+              setInfoModal({ ...infoModal, isOpen: false });
+
+              navigate("/");
+            };
+
+            setInfoModal({
+              isOpen: true,
+              isError: true,
+              onClose,
+              title: "Unauthorized",
+              message: "Redirect to Home Page",
+            });
+          }
+
           setUser(userData?.data);
         } catch (error) {
           console.error("Gagal ambil user", error);

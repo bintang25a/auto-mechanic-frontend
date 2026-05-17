@@ -4,12 +4,13 @@ import FormModal from "../../components/overlay/FormModal";
 import { createRule, deleteRule } from "../../_services/rules";
 import { showSymptom } from "../../_services/symptoms";
 import { showDamage } from "../../_services/damages";
-import { adminPageRules } from "../../_services/page";
 import styles from "../../styles/Admin.module.css";
 import { MdAddBox } from "react-icons/md";
 
 export default function Rule() {
-  const { setIsLoading, setInfoModal, refresh } = useOutletContext();
+  const { setIsLoading, setInfoModal, data, firstLoad } = useOutletContext();
+
+  const { rulesData } = data;
 
   const [rules, setRules] = useState([]);
   const [search, setSearch] = useState("");
@@ -19,11 +20,21 @@ export default function Rule() {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const { isFirstLoad } = firstLoad;
+
+    if (!isFirstLoad) {
       setIsLoading(true);
+    }
 
-      const [rulesData] = await Promise.all([adminPageRules()]);
+    // eslint-disable-next-line
+  }, []);
 
+  useEffect(() => {
+    const { setIsFirstLoad } = firstLoad;
+
+    let conditionTimeout;
+
+    if (rulesData) {
       setRules(rulesData?.rules);
 
       setRowCol({
@@ -42,12 +53,24 @@ export default function Rule() {
         }),
       });
 
-      setTimeout(() => setIsLoading(false), 250);
+      conditionTimeout = setTimeout(() => {
+        setIsFirstLoad(false);
+        setIsLoading(false);
+      }, 500);
+    }
+
+    const overlimitTimeout = setTimeout(() => {
+      setIsFirstLoad(false);
+      setIsLoading(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(conditionTimeout);
+      clearTimeout(overlimitTimeout);
     };
 
-    fetchData();
     // eslint-disable-next-line
-  }, [refresh]);
+  }, [rulesData]);
 
   const handleSearchChange = (e) => {
     const { value } = e.target;
@@ -206,7 +229,7 @@ export default function Rule() {
   };
 
   return (
-    <div className={styles.userPage}>
+    <div className={styles.page}>
       <header className={styles.header}>
         <h2>Rules Data</h2>
 
