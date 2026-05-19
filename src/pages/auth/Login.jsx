@@ -3,8 +3,8 @@ import Footer from "../../components/layout/Footer";
 import logo from "/images/logo/logo-nobg.png";
 import styles from "../../styles/Auth.module.css";
 import { FaEnvelope, FaLock, FaRightFromBracket } from "react-icons/fa6";
-import { useState } from "react";
-import { login } from "../../_services/auth";
+import { useEffect, useState } from "react";
+import { login, logout } from "../../_services/auth";
 import { Link, useNavigate } from "react-router-dom";
 import LoadingJump from "../../components/overlay/JumpLoading";
 import InfoModal from "../../components/overlay/InfoModal";
@@ -64,6 +64,25 @@ export default function Login() {
       setTimeout(() => setIsLoading(false), 250);
     }
   };
+
+  useEffect(() => {
+    const fetchSelf = async () => {
+      try {
+        await logout();
+
+        setModal({
+          isOpen: true,
+          isError: true,
+          title: "Logout",
+          message: "Automatic logout successfully",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSelf();
+  }, []);
 
   return (
     <>

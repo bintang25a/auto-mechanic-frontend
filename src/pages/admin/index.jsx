@@ -35,7 +35,6 @@ export default function Dashboard() {
     let conditionTimeout;
 
     if (complaints && mechanics && queue) {
-      console.log(queue);
       conditionTimeout = setTimeout(() => {
         setIsFirstLoad(false);
         setIsLoading(false);

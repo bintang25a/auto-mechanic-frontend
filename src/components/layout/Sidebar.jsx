@@ -84,10 +84,14 @@ export default function Sidebar() {
 
         <ul>
           <li>
-            <Link to={"/profile"}>Profile</Link>
+            <Link to={"/profile"} target="_blank">
+              Profile
+            </Link>
           </li>
           <li>
-            <Link to={"/profile/change-password"}>Change Password</Link>
+            <Link to={"/profile/change-password"} target="_blank">
+              Change Password
+            </Link>
           </li>
         </ul>
       </div>

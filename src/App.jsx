@@ -18,6 +18,7 @@ import StaffLayout from "./layouts/StaffLayout";
 import DashboardStaff from "./pages/Staff";
 import Show from "./pages/Staff/Show";
 import Complaint from "./pages/admin/Complaint";
+import Profile from "./pages/auth/Profile";
 
 export default function App() {
   return (
@@ -26,6 +27,8 @@ export default function App() {
         <Route index element={<LandingPage />} />
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="profile/:id" element={<Profile />} />
 
         <Route path="service" element={<ServiceLayout />}>
           <Route index element={<Service />} />
