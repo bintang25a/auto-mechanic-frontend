@@ -4,13 +4,311 @@
   height: 100%;
 
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: var(--px-24);
-  padding: var(--px-16);
+  padding: var(--px-24);
 
-  overflow: scroll;
+  overflow: auto;
+
+  .information {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--px-24);
+
+    .card {
+      flex: 1;
+      min-width: 200px;
+      height: fit-content;
+
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(8px);
+      box-shadow: -1px 4px 8px var(--gray-600);
+
+      border: 1px solid transparent;
+      border-radius: var(--px-16);
+      padding: var(--px-16);
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--px-24);
+
+      .icon {
+        aspect-ratio: 1/1;
+        width: var(--px-96);
+        height: auto;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-color: var(--platinum-gray);
+        border-radius: 1000px;
+
+        font-size: var(--fs-12);
+      }
+
+      .text {
+        display: flex;
+        flex-direction: column;
+        gap: var(--px-2);
+
+        * {
+          text-wrap: nowrap;
+        }
+
+        > h2 {
+          font-size: var(--fs-12);
+          font-weight: 800;
+          line-height: 1;
+          color: var(--gray-800);
+
+          > span {
+            font-size: var(--fs-4);
+            font-weight: 400;
+          }
+        }
+
+        > span:first-of-type {
+          font-size: var(--fs-5);
+          font-weight: 600;
+          color: var(--midnight-blue);
+        }
+
+        > span:last-of-type {
+          font-size: var(--fs-3);
+          font-weight: 400;
+          color: var(--gray-900);
+        }
+      }
+    }
+    .card:first-of-type {
+      border-color: var(--signal-orange);
+
+      .icon {
+        color: var(--signal-orange);
+      }
+    }
+    .card:nth-of-type(2) {
+      border-color: var(--btn-info);
+
+      .icon {
+        color: var(--btn-info);
+      }
+    }
+    .card:nth-of-type(3) {
+      border-color: var(--btn-save);
+
+      .icon {
+        color: var(--btn-save);
+      }
+    }
+    .card:last-of-type {
+      border-color: var(--btn-danger);
+
+      .icon {
+        color: var(--btn-danger);
+      }
+    }
+    .card:hover {
+      user-select: none;
+      transform: scale(1.05);
+    }
+  }
+
+  .leftDiv {
+    width: 100%;
+    max-width: 64%;
+  }
+  .rightDiv {
+    flex: 1;
+    max-width: 36%;
+  }
+  .leftDiv,
+  .rightDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--px-24);
+  }
+
+  .table {
+    width: 100%;
+    height: fit-content;
+
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    border-radius: var(--px-16);
+    padding: var(--px-16);
+    box-shadow: 2px 4px 4px var(--gray-600);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--px-24);
+
+    > h2 {
+      font-size: var(--fs-8);
+      font-weight: 600;
+      color: var(--midnight-blue);
+
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--px-8);
+    }
+
+    > table {
+      width: 100%;
+      table-layout: auto;
+      border-collapse: collapse;
+
+      > thead > tr {
+        border-bottom: 2px solid var(--midnight-blue);
+
+        > th {
+          font-size: var(--fs-5);
+          font-weight: 600;
+          color: var(--midnight-blue);
+        }
+      }
+
+      > tbody > tr {
+        border-bottom: 1px solid var(--midnight-blue);
+
+        > td {
+          font-size: var(--fs-4);
+          font-weight: 500;
+          color: var(--midnight-blue);
+          text-align: left;
+          padding: var(--px-8) 0;
+
+          > button,
+          > a {
+            width: fit-content;
+
+            display: flex;
+            align-items: center;
+            justify-self: center;
+            justify-content: center;
+
+            padding: var(--px-4) var(--px-8);
+            border-radius: var(--px-8);
+            background-color: var(--btn-info);
+
+            font-size: var(--fs-6);
+            color: var(--gray-200);
+          }
+
+          > a:hover {
+            transform: scale(1.05);
+            background-color: var(--signal-orange);
+            cursor: pointer;
+          }
+        }
+      }
+      > tbody > tr:hover {
+        transform: scale(1.0125);
+        background-color: var(--gray-200);
+      }
+    }
+  }
+
+  .panel {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--px-16);
+
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    border-radius: var(--px-16);
+    padding: var(--px-16);
+    box-shadow: 2px 4px 4px var(--gray-600);
+
+    > h2 {
+      width: 100%;
+      font-size: var(--fs-8);
+      font-weight: 600;
+      text-align: center;
+      text-wrap: nowrap;
+      color: var(--midnight-blue);
+      border-bottom: 2px solid var(--midnight-blue);
+    }
+
+    .queueCard,
+    .complaintCard {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: var(--px-32);
+
+      padding: var(--px-32) var(--px-16);
+      border-radius: var(--px-16);
+      box-shadow: 2px 1px 8px var(--gray-600);
+
+      > h3 {
+        width: 70%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: var(--px-32);
+
+        border-radius: var(--px-8);
+        border: 2px solid var(--btn-info);
+
+        font-size: var(--fs-12);
+        font-weight: 800;
+        color: var(--midnight-blue);
+      }
+
+      > span {
+        flex: 1;
+        background-color: var(--midnight-blue);
+
+        font-size: var(--fs-5);
+        font-weight: 500;
+        text-wrap: nowrap;
+        text-align: center;
+
+        padding: var(--px-8);
+        border-radius: var(--px-8);
+        color: var(--platinum-gray);
+      }
+    }
+    .complaintCard {
+      > h3 {
+        width: fit-content;
+        font-size: var(--fs-8);
+      }
+    }
+
+    .divider {
+      width: fit-content;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: var(--px-16);
+
+      > span {
+        font-size: var(--fs-5);
+        font-weight: 400;
+        color: var(--midnight-blue);
+      }
+    }
+  }
 }
 
 .page {

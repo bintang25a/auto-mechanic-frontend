@@ -102,9 +102,13 @@ export default function AdminLayout() {
         }
 
         if (location?.pathname === "/admin") {
+          const usersQuery = [...query, `role=mechanic`, `per_page=5`];
+
+          const complaintsQuery = [...query, `per_page=10`];
+
           const [usersData, complaintsData, queueData] = await Promise.all([
-            getUsers(query?.join("&")),
-            getComplaints(query?.join("&")),
+            getUsers(usersQuery?.join("&")),
+            getComplaints(complaintsQuery?.join("&")),
             getCurrentQ(),
           ]);
 
