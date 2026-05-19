@@ -5,23 +5,58 @@ import Header from "../../components/layout/Header";
 import { me } from "../../_services/auth";
 import LoadingJump from "../../components/overlay/JumpLoading";
 import styles from "../../styles/Auth.module.css";
+import { MdEdit } from "react-icons/md";
+
+const InputContainer = ({ formData, name, label, change }) => {
+  const [isEdit, setIsEdit] = useState(false);
+
+  return (
+    <div className={styles.inputContainer}>
+      <label htmlFor={name}>{label}</label>
+
+      <input
+        type="text"
+        id={name}
+        name={name}
+        value={formData?.[name]}
+        onChange={change}
+        disabled={!isEdit}
+      />
+
+      <button title="Edit" onClick={() => setIsEdit(!isEdit)}>
+        <MdEdit />
+      </button>
+    </div>
+  );
+};
 
 export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
 
       const [userData] = await Promise.all([me()]);
-      console.log(userData?.data)
+
       setUser(userData?.data);
+      setFormData(userData?.data);
       setIsLoading(false);
     };
 
     fetchData();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   return (
     <>
@@ -39,55 +74,37 @@ export default function Profile() {
           </div>
 
           <div className={styles.content}>
-            <div className={styles.inputContainer}>
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                defaultValue={user?.name}
-              />
-            </div>
-
-            <div className={styles.inputContainer}>
-              <label htmlFor="uid">UID</label>
-              <input type="text" id="uid" name="uid" defaultValue={user?.uid} />
-            </div>
-
-            <div className={styles.inputContainer}>
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                defaultValue={user?.email}
-              />
-            </div>
-
-            <div className={styles.inputContainer}>
-              <label htmlFor="phone_number">Phone Number</label>
-              <input
-                type="text"
-                id="phone_number"
-                name="phone_number"
-                defaultValue={user?.phone_number}
-              />
-            </div>
-
-            <div className={styles.inputContainer}>
-              <label htmlFor="role">Role</label>
-              <input
-                type="text"
-                id="role"
-                name="role"
-                defaultValue={user?.role}
-              />
-            </div>
+            <InputContainer
+              formData={formData}
+              label={"Name"}
+              name={"name"}
+              change={handleChange}
+            />
+            <InputContainer
+              formData={formData}
+              label={"UID"}
+              name={"uid"}
+              change={handleChange}
+            />
+            <InputContainer
+              formData={formData}
+              label={"Role"}
+              name={"role"}
+              change={handleChange}
+            />
+            <InputContainer
+              formData={formData}
+              label={"Email"}
+              name={"email"}
+              change={handleChange}
+            />
+            <InputContainer
+              formData={formData}
+              label={"Phone Number"}
+              name={"phone_number"}
+              change={handleChange}
+            />
           </div>
-          <h1>Kerenn</h1>
-          <h1>Kerenn</h1>
-          <h1>Kerenn</h1>
-          {/* <span>{JSON.stringify(user)}</span> */}
         </div>
       </main>
       <Footer />
